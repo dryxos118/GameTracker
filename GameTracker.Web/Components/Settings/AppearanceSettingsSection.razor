@@ -1,0 +1,137 @@
+@using System.Globalization
+@using GameTracker.Shared.Components.Shared
+@using GameTracker.Web.App.Models
+@inherits AppComponentBase
+
+<MudPaper Class="pa-4 settings-section" Outlined="true">
+    <MudStack Spacing="4">
+
+        <PageHeader
+            Title="@L["Settings.Appearance.Title"]"
+            SubTitle="@L["Settings.Appearance.Subtitle"]"
+            Icon="@Icons.Material.Filled.Palette"
+            Color="Color.Primary"/>
+
+        <MudDivider/>
+
+        <MudStack Spacing="3">
+
+            <MudStack Row="true"
+                      Breakpoint="Breakpoint.SmAndDown"
+                      Justify="Justify.SpaceBetween">
+
+                <MudStack Spacing="0">
+                    <MudText Typo="Typo.subtitle2">@L["Settings.Appearance.Theme"]</MudText>
+                    <MudText Typo="Typo.body2" Color="Color.Secondary">
+                        @L["Settings.Appearance.ThemeDescription"]
+                    </MudText>
+                </MudStack>
+
+                <MudSelect T="string"
+                           Value="SelectedTheme"
+                           ValueChanged="ChangeThemeMode"
+                           Dense="true"
+                           Margin="Margin.Dense"
+                           Variant="Variant.Outlined"
+                           Class="settings-select">
+                    @foreach (ThemeOption theme in _themeModes)
+                    {
+                        <MudSelectItem Value="@theme.Value">
+                            <MudStack Row="true"
+                                      Spacing="2"
+                                      AlignItems="AlignItems.Center">
+
+                                <MudIcon Icon="@theme.Icon"
+                                         Size="Size.Small"
+                                         Color="Color.Primary"/>
+
+                                <MudText Typo="Typo.body2">
+                                    @L[theme.Label]
+                                </MudText>
+                            </MudStack>
+                        </MudSelectItem>
+                    }
+                </MudSelect>
+            </MudStack>
+
+            <MudDivider/>
+
+            <MudStack Row="true"
+                      Breakpoint="Breakpoint.SmAndDown"
+                      Justify="Justify.SpaceBetween">
+
+                <MudStack Spacing="0">
+                    <MudText Typo="Typo.subtitle2">@L["Settings.Appearance.PrimaryColor"]</MudText>
+                    <MudText Typo="Typo.body2" Color="Color.Secondary">
+                        @L["Settings.Appearance.PrimaryColorDescription"]
+                    </MudText>
+                </MudStack>
+
+                <MudSelect T="string"
+                           Value="@ThemeState.PrimaryColor"
+                           ValueChanged="@(s => ChangePrimaryColor(s))"
+                           Variant="Variant.Outlined"
+                           Margin="Margin.Dense"
+                           Dense="true"
+                           Class="settings-select">
+                    @foreach (KeyValuePair<string, string> color in _themeColors)
+                    {
+                        <MudSelectItem Value="@color.Key">
+                            <MudStack Row="true"
+                                      Spacing="2"
+                                      AlignItems="AlignItems.Center">
+
+                                <MudPaper Class="settings-color-preview"
+                                          Style="@($"background:{color.Value}")"/>
+
+                                <MudText Typo="Typo.body2">
+                                    @color.Key
+                                </MudText>
+                            </MudStack>
+                        </MudSelectItem>
+                    }
+                </MudSelect>
+            </MudStack>
+
+            <MudDivider/>
+
+            <MudStack Row="true"
+                      Breakpoint="Breakpoint.SmAndDown"
+                      Justify="Justify.SpaceBetween">
+
+                <MudStack Spacing="0">
+                    <MudText Typo="Typo.subtitle2">@L["Settings.Appearance.Language"]</MudText>
+                    <MudText Typo="Typo.body2" Color="Color.Secondary">
+                        @L["Settings.Appearance.LanguageDescription"]
+                    </MudText>
+                </MudStack>
+
+                <MudSelect T="CultureInfo"
+                           Value="CurrentCulture"
+                           ValueChanged="@SetCulture"
+                           Dense="true"
+                           Margin="Margin.Dense"
+                           Variant="Variant.Outlined"
+                           Class="settings-select">
+                    @foreach (KeyValuePair<string, CultureInfo> culture in SupportedCultures)
+                    {
+                        <MudSelectItem Value="@culture.Value">
+                            <MudStack Row="true"
+                                      Spacing="2"
+                                      AlignItems="AlignItems.Center">
+
+                                <MudIcon Icon="@GetCultureIcon(culture.Value)"
+                                         Size="Size.Small"/>
+
+                                <MudText Typo="Typo.body2">
+                                    @culture.Value.NativeName
+                                </MudText>
+                            </MudStack>
+                        </MudSelectItem>
+                    }
+                </MudSelect>
+            </MudStack>
+
+        </MudStack>
+    </MudStack>
+</MudPaper>

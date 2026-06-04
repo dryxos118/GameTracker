@@ -1,0 +1,24 @@
+@using MudBlazor
+
+<MudThemeProvider Theme="_theme" IsDarkMode="@ThemeState.IsDarkMode" />
+<MudPopoverProvider />
+<MudDialogProvider />
+<MudSnackbarProvider />
+
+@if (!ThemeState.IsInitialized)
+{
+    <div class="app-loading">
+        <MudStack AlignItems="AlignItems.Center" Spacing="2">
+            <MudIcon Class="app-loading-icon"
+                     Icon="@Icons.Material.Filled.SportsEsports" />
+
+            <MudText Typo="Typo.subtitle2" Class="app-loading-text">
+                Loading
+            </MudText>
+        </MudStack>
+    </div>
+}
+else
+{
+    @ChildContent
+}

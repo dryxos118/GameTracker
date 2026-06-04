@@ -1,0 +1,95 @@
+@using GameTracker.Shared.Components.Shared
+@inherits AppComponentBase
+
+<MudPaper Class="pa-4 settings-section" Outlined="true">
+    <MudStack Spacing="4">
+
+        <PageHeader
+            Title="@L["Settings.Database.Title"]"
+            SubTitle="@L["Settings.Database.Subtitle"]"
+            Icon="@Icons.Material.Filled.Storage"
+            Color="Color.Warning"/>
+
+        <MudDivider/>
+
+        <MudGrid Spacing="2">
+
+            <MudItem xs="12" md="6">
+                <MudPaper Class="pa-3 database-action-card"
+                          Outlined="true">
+
+                    <MudStack Spacing="2">
+
+                        <MudIcon Icon="@Icons.Material.Filled.Dataset"
+                                 Color="Color.Primary"/>
+
+                        <MudText Typo="Typo.subtitle2">
+                            @L["Settings.Database.SeedDemoData"]
+                        </MudText>
+
+                        <MudText Typo="Typo.body2"
+                                 Color="Color.Secondary">
+                            @L["Settings.Database.SeedDemoDataDescription"]
+                        </MudText>
+
+                        <MudButton Variant="Variant.Filled"
+                                   Color="Color.Primary"
+                                   FullWidth="true"
+                                   OnClick="SeedDemoData">
+
+                            @L["Common.Add"]
+
+                        </MudButton>
+                    </MudStack>
+                </MudPaper>
+            </MudItem>
+
+            <MudItem xs="12" md="6">
+                <MudPaper Class="pa-3"
+                          Outlined="true">
+
+                    <MudStack Spacing="2">
+
+                        <MudIcon Icon="@Icons.Material.Filled.RestartAlt"
+                                 Color="Color.Warning"/>
+
+                        <MudText Typo="Typo.subtitle2">
+                            @L["Settings.Database.ResetDatabase"]
+                        </MudText>
+
+                        <MudText Typo="Typo.body2"
+                                 Color="Color.Secondary">
+                            @L["Settings.Database.ResetDatabaseDescription"]
+                        </MudText>
+                        
+                        <MudButtonGroup Color="Color.Warning"
+                                        Variant="Variant.Filled"
+                                        FullWidth="true">
+
+                            <MudButton OnClick="@(() => ResetDatabase(false))">
+                                @L["Common.Reset"]
+                            </MudButton>
+
+                            <MudMenu Icon="@Icons.Material.Filled.ArrowDropDown"
+                                     Variant="Variant.Filled" Style="align-self: auto;">
+
+                                <MudMenuItem OnClick="@(() => ResetDatabase(true))">
+                                    <MudStack Row="true" Spacing="2" AlignItems="AlignItems.Center">
+                                        <MudIcon Icon="@Icons.Material.Filled.Dataset"
+                                                 Size="Size.Small"
+                                                 Class="mr-2"/>
+
+                                        @L["Settings.Database.ResetWithDemoData"]
+                                    </MudStack>
+                                </MudMenuItem>
+
+                            </MudMenu>
+
+                        </MudButtonGroup>
+                    </MudStack>
+                </MudPaper>
+            </MudItem>
+            
+        </MudGrid>
+    </MudStack>
+</MudPaper>

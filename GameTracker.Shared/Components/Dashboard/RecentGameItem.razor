@@ -1,0 +1,33 @@
+@using GameTracker.Shared.Features.Dashboard.Dtos
+
+<MudPaper Class="pa-2" Outlined="true">
+
+    <MudStack Row Spacing="2" AlignItems="AlignItems.Center">
+
+        <MudImage Src="@Game.CoverUrl"
+                  Height="70"
+                  ObjectFit="ObjectFit.Cover"
+                  Class="rounded"
+                  Style="width: 50%"/>
+
+        <MudStack Spacing="2" Class="py-1" AlignItems="AlignItems.Center" Justify="Justify.SpaceBetween"
+                  Style="flex-grow: 1">
+
+            <MudText Typo="Typo.body2">
+                @Game.Title
+            </MudText>
+
+            <MudText Typo="Typo.caption"
+                     Color="Color.Secondary">
+                @Game.Platform
+            </MudText>
+
+        </MudStack>
+
+    </MudStack>
+
+</MudPaper>
+
+@code {
+    [Parameter, EditorRequired] public RecentGameDto Game { get; set; } = null!;
+}

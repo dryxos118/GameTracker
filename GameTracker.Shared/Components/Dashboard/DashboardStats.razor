@@ -1,0 +1,41 @@
+@using GameTracker.Shared.Components.Shared
+@using GameTracker.Shared.Features.Dashboard.Dtos
+@inherits AppComponentBase
+
+<MudGrid>
+    <MudItem xs="12" sm="6" md="3">
+        <StatCard Title="Favoris"
+                  Value="@Stats.FavoriteCount.ToString()"
+                  Subtitle="Jeux marqués favoris"
+                  Icon="@Icons.Material.Filled.Star"
+                  Color="Color.Warning" IsLarge="true"/>
+    </MudItem>
+
+    <MudItem xs="12" sm="6" md="3">
+        <StatCard Title="Backlog"
+                  Value="@Stats.BacklogCount.ToString()"
+                  Subtitle="À faire plus tard"
+                  Icon="@Icons.Material.Filled.Inventory2"
+                  Color="Color.Info" IsLarge="true"/>
+    </MudItem>
+
+    <MudItem xs="12" sm="6" md="3">
+        <StatCard Title="En cours"
+                  Value="@Stats.PlayingCount.ToString()"
+                  Subtitle="Jeux commencés"
+                  Icon="@Icons.Material.Filled.SportsEsports"
+                  Color="Color.Primary" IsLarge="true"/>
+    </MudItem>
+
+    <MudItem xs="12" sm="6" md="3">
+        <StatCard Title="Terminés"
+                  Value="@Stats.CompletedCount.ToString()"
+                  Subtitle="Jeux finis"
+                  Icon="@Icons.Material.Filled.CheckCircle"
+                  Color="Color.Success" IsLarge="true"/>
+    </MudItem>
+</MudGrid>
+
+@code {
+    [Parameter, EditorRequired] public DashboardStatsDto Stats { get; set; } = null!;
+}

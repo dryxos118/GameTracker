@@ -1,0 +1,26 @@
+@inherits AppComponentBase
+
+<MudPaper Class="pa-4" Elevation="0" Outlined="true">
+    <MudStack Row AlignItems="AlignItems.Center" Justify="Justify.SpaceBetween">
+        <MudStack Spacing="1">
+            <MudText Typo="Typo.body2">
+                @Title
+            </MudText>
+
+            <MudText Typo="@(IsLarge ? Typo.h5 : Typo.subtitle2)" Class="font-weight-bold">
+                @Value
+            </MudText>
+
+            @if (!string.IsNullOrWhiteSpace(Subtitle))
+            {
+                <MudText Typo="Typo.caption" Color="Color.Secondary">
+                    @Subtitle
+                </MudText>
+            }
+        </MudStack>
+
+        <MudAvatar Color="@Color" Variant="Variant.Filled">
+            <MudIcon Icon="@Icon"/>
+        </MudAvatar>
+    </MudStack>
+</MudPaper>

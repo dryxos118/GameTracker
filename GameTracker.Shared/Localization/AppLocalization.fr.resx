@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<root>
+    <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+        <xsd:element name="root" msdata:IsDataSet="true">
+            
+        </xsd:element>
+    </xsd:schema>
+    <resheader name="resmimetype">
+        <value>text/microsoft-resx</value>
+    </resheader>
+    <resheader name="version">
+        <value>1.3</value>
+    </resheader>
+    <resheader name="reader">
+        <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    </resheader>
+    <resheader name="writer">
+        <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    </resheader>
+    <data name="Settings.Title" xml:space="preserve">
+        <value>Paramètres</value>
+    </data>
+    <data name="Settings.Subtitle" xml:space="preserve">
+        <value>Personnalisez l'application et gérez vos données locales.</value>
+    </data>
+    <data name="Settings.Appearance.Title" xml:space="preserve">
+        <value>Apparence</value>
+    </data>
+    <data name="Settings.Appearance.Subtitle" xml:space="preserve">
+        <value>Personnalisez le thème, la couleur principale et la densité de l'interface.</value>
+    </data>
+    <data name="Settings.Appearance.Theme" xml:space="preserve">
+        <value>Thème</value>
+    </data>
+    <data name="Settings.Appearance.ThemeDescription" xml:space="preserve">
+        <value>Choisissez le thème d’apparence de l’application.</value>
+    </data>
+    <data name="Settings.Appearance.PrimaryColor" xml:space="preserve">
+        <value>Couleur principale</value>
+    </data>
+    <data name="Settings.Appearance.PrimaryColorDescription" xml:space="preserve">
+        <value>Choisis la couleur d'accent de l'application.</value>
+    </data>
+    <data name="Settings.Appearance.Language" xml:space="preserve">
+        <value>Langue</value>
+    </data>
+    <data name="Settings.Appearance.LanguageDescription" xml:space="preserve">
+        <value>Choisis la langue d'affichage de l'application.</value>
+    </data>
+    <data name="Settings.Application.Title" xml:space="preserve">
+        <value>Application</value>
+    </data>
+    <data name="Settings.Application.Subtitle" xml:space="preserve">
+        <value>Consultez les informations générales de Game Tracker.</value>
+    </data>
+    <data name="Settings.Application.Name" xml:space="preserve">
+        <value>Nom</value>
+    </data>
+    <data name="Settings.Application.Version" xml:space="preserve">
+        <value>Version</value>
+    </data>
+    <data name="Settings.Application.LocalDatabase" xml:space="preserve">
+        <value>Base locale</value>
+    </data>
+    <data name="Settings.Application.Stack" xml:space="preserve">
+        <value>Stack</value>
+    </data>
+    <data name="Settings.Database.Title" xml:space="preserve">
+        <value>Base de données</value>
+    </data>
+    <data name="Settings.Database.Subtitle" xml:space="preserve">
+        <value>Gérez les données locales et les données de démonstration.</value>
+    </data>
+    <data name="Settings.Database.SeedDemoData" xml:space="preserve">
+        <value>Données de démonstration</value>
+    </data>
+    <data name="Settings.Database.SeedDemoDataDescription" xml:space="preserve">
+        <value>Ajoute des plateformes, genres et jeux fictifs.</value>
+    </data>
+    <data name="Settings.Database.ResetDatabase" xml:space="preserve">
+        <value>Réinitialiser la base</value>
+    </data>
+    <data name="Settings.Database.ResetDatabaseDescription" xml:space="preserve">
+        <value>Réinitialise complètement la base locale.</value>
+    </data>
+    <data name="Settings.Database.ExportImport" xml:space="preserve">
+        <value>Export / Import</value>
+    </data>
+    <data name="Settings.Database.ExportImportDescription" xml:space="preserve">
+        <value>Sauvegardez ou restaurez votre base de données locale.</value>
+    </data>
+    <data name="Settings.Database.SeededMessage" xml:space="preserve">
+        <value>Données de démonstration ajoutées</value>
+    </data>
+    <data name="Settings.Database.ResetSuccess" xml:space="preserve">
+        <value>Base de données réinitialisée.</value>
+    </data>
+    <data name="Common.Add" xml:space="preserve">
+        <value>Ajouter</value>
+    </data>
+    <data name="Common.Reset" xml:space="preserve">
+        <value>Réinitialiser</value>
+    </data>
+    <data name="Common.Open" xml:space="preserve">
+        <value>Ouvrir</value>
+    </data>
+    <data name="Settings.Appearance.Dark" xml:space="preserve">
+        <value>Sombre</value>
+    </data>
+    <data name="Settings.Appearance.Light" xml:space="preserve">
+        <value>Clair</value>
+    </data>
+    <data name="Settings.Database.ResetWithDemoSuccess" xml:space="preserve">
+        <value>Base réinitialisée avec les données de démonstration.</value>
+    </data>
+    <data name="Settings.Database.ResetWithDemoData" xml:space="preserve">
+        <value>Réinitialiser avec données de démo</value>
+    </data>
+    <data name="Settings.Database.ImportWarning" xml:space="preserve">
+        <value>L'import remplacera entièrement la base de données actuelle.</value>
+    </data>
+    <data name="Settings.Database.ExportDescription" xml:space="preserve">
+        <value>Télécharge une copie locale de la base SQLite.</value>
+    </data>
+    <data name="Settings.Database.ImportDescription" xml:space="preserve">
+        <value>Importe une base SQLite existante et remplace les données actuelles.</value>
+    </data>
+    <data name="Settings.Database.ImportSuccess" xml:space="preserve">
+        <value>Base de données importée avec succès.</value>
+    </data>
+    <data name="Settings.Database.ExportSuccess" xml:space="preserve">
+        <value>Base de données exportée avec succès.</value>
+    </data>
+    <data name="Common.Close" xml:space="preserve">
+        <value>Fermer</value>
+    </data>
+    <data name="Common.Export" xml:space="preserve">
+        <value>Exporter</value>
+    </data>
+    <data name="Common.Import" xml:space="preserve">
+        <value>Importer</value>
+    </data>
+    <data name="Games.Library" xml:space="preserve">
+        <value>Bibliothèque</value>
+    </data>
+</root>

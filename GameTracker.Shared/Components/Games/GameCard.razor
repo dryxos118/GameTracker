@@ -1,0 +1,208 @@
+@using GameTracker.Shared.Components.Shared
+@using GameTracker.Shared.Domain.Enums
+@using GameTracker.Shared.Features.Games
+@using GameTracker.Shared.Features.Games.Dtos
+@using GameTracker.Shared.UI.Models
+
+<MudCard Outlined="true" Class="game-card">
+
+    <div class="game-card-cover">
+
+        @if (!string.IsNullOrWhiteSpace(Game.CoverUrl))
+        {
+            <MudImage Src="@Game.CoverUrl"
+                      Alt="@Game.Title"
+                      ObjectFit="ObjectFit.Cover"
+                      Class="game-card-image"/>
+        }
+        else
+        {
+            <MudStack AlignItems="AlignItems.Center"
+                      Justify="Justify.Center"
+                      Class="game-card-placeholder">
+
+                <MudIcon Icon="@Icons.Material.Filled.SportsEsports"
+                         Color="Color.Primary"
+                         Style="font-size: 72px;"/>
+
+            </MudStack>
+        }
+
+        @if (Game.IsFavorite)
+        {
+            <MudIcon Icon="@Icons.Material.Filled.Favorite"
+                     Color="Color.Error"
+                     Size="Size.Medium"
+                     Class="game-card-favorite"/>
+        }
+
+        <MudMenu Size="Size.Medium" Icon="@Icons.Material.Filled.MoreVert"
+                 Class="game-card-menu">
+
+            <MudMenuItem Icon="@Icons.Material.Filled.Visibility">
+                Détails
+            </MudMenuItem>
+
+            <MudMenuItem Icon="@Icons.Material.Filled.Edit"
+                         OnClick="@(async () => await UpdateGame())">
+                Modifier
+            </MudMenuItem>
+
+            <MudMenuItem Icon="@Icons.Material.Filled.DeleteOutline"
+                         IconColor="Color.Error"
+                         OnClick="@(async () => await DeleteGame())">
+                Supprimer
+            </MudMenuItem>
+
+        </MudMenu>
+
+    </div>
+
+    <MudCardContent>
+
+        <MudStack Spacing="2">
+
+            <MudText Typo="Typo.h6">
+                @Game.Title
+            </MudText>
+
+            <MudStack Row="true" Spacing="1">
+
+                @if (Game.PlayStatus is not null)
+                {
+                    <MudChip T="GamePlayStatus"
+                             Size="Size.Small"
+                             Color="@GetStatusColor(Game.PlayStatus.Value)">
+
+                        @Game.PlayStatus
+
+                    </MudChip>
+                }
+
+                <MudChip T="string" Size="Size.Small" Variant="Variant.Outlined">
+                    @if (Game.LauncherName is not null)
+                    {
+                        string value = $"{Game.PlatformName} : {Game.LauncherName}";
+                        @value
+                    }
+                    else
+                    {
+                        @Game.PlatformName
+                    }
+                </MudChip>
+
+            </MudStack>
+
+            <MudStack Row="true"
+                      Justify="Justify.SpaceBetween">
+
+                <MudText Typo="Typo.body2"
+                         Color="Color.Secondary">
+
+                    @Game.PlayedHours h jouées
+
+                </MudText>
+
+                @if (Game.Rating is not null)
+                {
+                    <MudText Typo="Typo.body2"
+                             Color="Color.Warning">
+
+                        ⭐ @Game.Rating/10
+
+                    </MudText>
+                }
+
+            </MudStack>
+
+        </MudStack>
+
+    </MudCardContent>
+
+</MudCard>
+
+@code {
+    [Parameter, EditorRequired] public GameListItemDto Game { get; set; } = null!;
+    [Inject] private GameService GameService { get; set; } = null!;
+    [Inject] private IDialogService DialogService { get; set; } = null!;
+    [Inject] private ISnackbar Snackbar { get; set; } = null!;
+
+    private static Color GetStatusColor(GamePlayStatus status)
+    {
+        return status switch
+        {
+            GamePlayStatus.Playing => Color.Primary,
+            GamePlayStatus.Completed => Color.Success,
+            GamePlayStatus.Paused => Color.Warning,
+            GamePlayStatus.Dropped => Color.Error,
+            GamePlayStatus.Backlog => Color.Info,
+            _ => Color.Default
+        };
+    }
+
+    private async Task UpdateGame()
+    {
+        DialogParameters parameters = new()
+        {
+            [nameof(GameFormDialog.Title)] = "Modifier un jeu",
+            [nameof(GameFormDialog.GameId)] = Game.Id
+        };
+
+        IDialogReference dialog = await DialogService.ShowAsync<GameFormDialog>(
+            null, parameters,
+            new DialogOptions { BackdropClick = false, CloseOnEscapeKey = false });
+
+        DialogResult? result = await dialog.Result;
+
+        if (result is null || result.Canceled)
+            return;
+
+        if (result.Data is not GameFormDto dto)
+        {
+            Snackbar.Add(
+                "Impossible de récupérer les données du jeu.",
+                Severity.Error);
+            return;
+        }
+
+        await GameService.UpdateAsync(dto);
+
+        Snackbar.Add(
+            $"Le jeu '{dto.Title}' a été Modifier.",
+            Severity.Success);
+    }
+
+    private async Task DeleteGame()
+    {
+        AppMessageDialogModel model = new()
+        {
+            Title = "Confirmation",
+            Message = $"Supprimer le jeu \"{Game.Title}\" ?",
+            SubTitle = "Cette action est irréversible.",
+            ConfirmText = "Supprimer",
+            CancelText = "Annuler",
+            Icon = Icons.Material.Filled.Delete,
+            Color = Color.Error
+        };
+
+        DialogParameters parameters = new()
+        {
+            [nameof(AppMessageDialog.Model)] = model
+        };
+
+        IDialogReference dialog = await DialogService.ShowAsync<AppMessageDialog>(parameters);
+
+        DialogResult? result = await dialog.Result;
+
+        if (result is null || result.Canceled)
+            return;
+
+        bool deleted = await GameService.DeleteAsync(Game.Id);
+
+        if (deleted)
+            Snackbar.Add(
+                $"Le jeu '{Game.Title}' a été supprimé.",
+                Severity.Success);
+    }
+
+}

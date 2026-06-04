@@ -1,0 +1,23 @@
+@using GameTracker.Web.App.Configurations
+
+<MudDrawer
+    Open="@Open"
+    OpenChanged="@OpenChanged"
+    Variant="@Variant"
+    ClipMode="@ClipMode"
+    Elevation="@Elevation"
+    Anchor="@Anchor">
+    <MudNavMenu>
+        <AppNavMenu NavItems="@RoutesConfiguration.NavItems" IsMini="@(Variant == DrawerVariant.Mini)"/>
+    </MudNavMenu>
+</MudDrawer>
+
+@code {
+    [Parameter] public bool Open { get; set; }
+    [Parameter] public EventCallback<bool> OpenChanged { get; set; }
+
+    [Parameter] public DrawerVariant Variant { get; set; } = DrawerVariant.Responsive;
+    [Parameter] public DrawerClipMode ClipMode { get; set; } = DrawerClipMode.Always;
+    [Parameter] public Anchor Anchor { get; set; } = Anchor.Left;
+    [Parameter] public int Elevation { get; set; } = 1;
+}

@@ -1,0 +1,43 @@
+@inherits AppComponentBase
+
+<MudStack Row="true"
+          Class="page-header"
+          Justify="Justify.SpaceBetween"
+          Spacing="3"
+          Breakpoint="Breakpoint.SmAndDown">
+
+    <MudStack Row="true"
+              AlignItems="AlignItems.Center"
+              Spacing="2">
+
+        @if (!string.IsNullOrWhiteSpace(Icon))
+        {
+            <MudAvatar Color="@Color"
+                       Variant="Variant.Filled"
+                       Size="@(IsLarge ? Size.Large : Size.Medium)">
+
+                <MudIcon Icon="@Icon"
+                         Size="@(IsLarge ? Size.Medium : Size.Small)" />
+            </MudAvatar>
+        }
+
+        <MudStack Spacing="0">
+            <MudText Typo="@(IsLarge ? Typo.h5 : Typo.body1)">
+                @Title
+            </MudText>
+
+            @if (!string.IsNullOrWhiteSpace(SubTitle))
+            {
+                <MudText Typo="@(IsLarge ? Typo.body1 : Typo.body2)"
+                         Color="Color.Secondary">
+
+                    @SubTitle
+                </MudText>
+            }
+        </MudStack>
+
+    </MudStack>
+
+    @HeaderContent
+
+</MudStack>

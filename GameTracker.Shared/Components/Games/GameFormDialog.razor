@@ -1,0 +1,24 @@
+@using GameTracker.Shared.Components.Shared
+@inherits AppComponentBase
+
+<AppDialogShell Title="@Title" ConfirmText="Enregistrer" OnConfirm="@Submit" Style="min-width: 50%">
+    
+    <MudTabs Rounded="true" Class="tabs-grow" TabPanelsClass="pt-4" >
+
+        <MudTabPanel Text="Infos" Icon="@Icons.Material.Filled.Info">
+            <GameFormInformationsTab Model="@Model"/>
+        </MudTabPanel>
+
+        <MudTabPanel Text="Bibliothéque" Icon="@Icons.Material.Filled.Inventory2">
+            <GameFormLibraryTab Model="@Model"/>
+        </MudTabPanel>
+
+        <MudTabPanel Text="Classification" Icon="@Icons.Material.Filled.LocalOffer">
+            <GameFormClassificationTab Model="@Model" 
+                                       Platforms="@Platforms" Launchers="@Launchers" 
+                                       Genres="@Genres" Tags="@Tags"/>
+        </MudTabPanel>
+
+    </MudTabs>
+    
+</AppDialogShell>

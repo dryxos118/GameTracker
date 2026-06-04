@@ -1,0 +1,30 @@
+@using GameTracker.Web.App.Providers
+@inherits LayoutComponentBase
+
+<AppProviders>
+    <MudLayout>
+        <AppHeader
+            IsDarkMode="@ThemeState.IsDarkMode"
+            OnDrawerToggle="@ToggleDrawer"/>
+
+        <MudHidden Breakpoint="Breakpoint.MdAndDown">
+            <AppDrawer
+                Open="false"
+                Variant="DrawerVariant.Mini"
+                Elevation="1"/>
+        </MudHidden>
+
+        <AppDrawer
+            Open="@_drawerOpen"
+            OpenChanged="@SetDrawerOpen"
+            Variant="DrawerVariant.Temporary"
+            Elevation="2"/>
+
+        <MudMainContent>
+            <MudContainer MaxWidth="MaxWidth.ExtraLarge" Class="py-4">
+                @Body
+            </MudContainer>
+        </MudMainContent>
+    </MudLayout>
+</AppProviders>
+

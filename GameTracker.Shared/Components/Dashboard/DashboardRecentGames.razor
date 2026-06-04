@@ -1,0 +1,31 @@
+@using GameTracker.Shared.Components.Shared
+@using GameTracker.Shared.Features.Dashboard.Dtos
+
+<MudPaper Class="pa-4" Outlined="true">
+
+    <MudStack Spacing="3">
+
+        <PageHeader Title="Derniers ajouts"
+                    SubTitle="Jeux récemment ajoutés à votre bibliothèque"
+                    Icon="@Icons.Material.Filled.History"/>
+
+        <MudDivider/>
+
+        <MudGrid Spacing="2">
+
+            @foreach (RecentGameDto game in Games)
+            {
+                <MudItem xs="12" md="6">
+                    <RecentGameItem Game="game" />
+                </MudItem>
+            }
+
+        </MudGrid>
+
+    </MudStack>
+
+</MudPaper>
+
+@code {
+    [Parameter, EditorRequired] public List<RecentGameDto> Games { get; set; } = null!;
+}

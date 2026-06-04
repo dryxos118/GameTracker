@@ -1,0 +1,138 @@
+@using GameTracker.Shared.Domain.Enums
+@using GameTracker.Shared.Features.Common.Dtos
+@using GameTracker.Shared.Features.Games.Dtos
+@using GameTracker.Shared.UI.Helpers
+@using GameTracker.Shared.UI.Models
+@inherits AppComponentBase
+
+<MudGrid Spacing="3" Class="align-center">
+
+    <MudItem xs="12" md="3">
+        <MudText Typo="Typo.subtitle2" Class="field-label field-label-required">
+            Plateforme :
+        </MudText>
+    </MudItem>
+
+    <MudItem xs="12" md="9">
+        <MudSelect T="int?" Variant="Variant.Outlined" @bind-Value="Model.PlatformId" Margin="Margin.Dense">
+            @foreach (LookupItemDto platform in Platforms)
+            {
+                <MudSelectItem Value="@((int?)platform.Id)">
+                    @platform.Name
+                </MudSelectItem>
+            }
+        </MudSelect>
+    </MudItem>
+
+    <MudItem xs="12" md="3">
+        <MudText Typo="Typo.subtitle2" Class="field-label">
+            Launcher :
+        </MudText>
+    </MudItem>
+
+    <MudItem xs="12" md="9">
+        <MudSelect T="int?"
+                   @bind-Value="Model.LauncherId"
+                   Variant="Variant.Outlined"
+                   Margin="Margin.Dense">
+            @foreach (LookupItemDto launcher in Launchers)
+            {
+                <MudSelectItem Value="@((int?)launcher.Id)">
+                    @launcher.Name
+                </MudSelectItem>
+            }
+        </MudSelect>
+    </MudItem>
+
+    <MudItem xs="12" md="3">
+        <MudText Typo="Typo.subtitle2" Class="field-label">
+            Modes :
+        </MudText>
+    </MudItem>
+
+    <MudItem xs="12" md="9">
+        <MudSelect T="GameMode" @bind-Value="Model.Modes"
+                   Variant="Variant.Outlined" Margin="Margin.Dense">
+            @foreach (SelectItemDto<GameMode> mode in SelectHelper.GameModes)
+            {
+                <MudSelectItem Value="@mode.Value">
+                    @mode.Text
+                </MudSelectItem>
+            }
+        </MudSelect>
+    </MudItem>
+
+    <MudItem xs="12" md="3" Class="field-label">
+        <MudText Typo="Typo.subtitle2">
+            Genres :
+        </MudText>
+    </MudItem>
+
+    <MudItem xs="12" md="9">
+        <MudSelect T="int"
+                   Variant="Variant.Outlined" Margin="Margin.Dense"
+                   MultiSelection="true" SelectedValues="Model.GenreIds"
+                   SelectedValuesChanged="OnGenresChanged"
+                   ToStringFunc="GetGenreName">
+            @foreach (LookupItemDto genre in Genres)
+            {
+                <MudSelectItem Value="@genre.Id">
+                    @genre.Name
+                </MudSelectItem>
+            }
+        </MudSelect>
+    </MudItem>
+
+    <MudItem xs="12" md="3">
+        <MudText Typo="Typo.subtitle2" Class="field-label">
+            Tags :
+        </MudText>
+    </MudItem>
+
+    <MudItem xs="12" md="9">
+        <MudSelect T="int" 
+                   Variant="Variant.Outlined" Margin="Margin.Dense"
+                   MultiSelection="true" SelectedValues="Model.TagIds"
+                   SelectedValuesChanged="OnTagsChanged"
+                   ToStringFunc="GetTagName">
+            @foreach (LookupItemDto tag in Tags)
+            {
+                <MudSelectItem Value="@tag.Id">
+                    @tag.Name
+                </MudSelectItem>
+            }
+        </MudSelect>
+    </MudItem>
+
+</MudGrid>
+
+@code {
+    [Parameter, EditorRequired] public GameFormDto Model { get; set; } = null!;
+    [Parameter] public List<LookupItemDto> Platforms { get; set; } = [];
+    [Parameter] public List<LookupItemDto> Launchers { get; set; } = [];
+    [Parameter] public List<LookupItemDto> Genres { get; set; } = [];
+    [Parameter] public List<LookupItemDto> Tags { get; set; } = [];
+
+    private string GetGenreName(int id)
+    {
+        return Genres.FirstOrDefault(x => x.Id == id)?.Name ?? string.Empty;
+    }
+
+    private void OnGenresChanged(IReadOnlyCollection<int>? values)
+    {
+        if (values is not null)
+            Model.GenreIds = values.ToList();
+    }
+
+    private string GetTagName(int id)
+    {
+        return Tags.FirstOrDefault(x => x.Id == id)?.Name ?? string.Empty;
+    }
+
+    private void OnTagsChanged(IReadOnlyCollection<int>? values)
+    {
+        if (values is not null)
+            Model.TagIds = values.ToList();
+    }
+
+}

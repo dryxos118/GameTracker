@@ -1,0 +1,56 @@
+@page "/games"
+@using GameTracker.Shared.Components.Games
+@using GameTracker.Shared.Components.Shared
+@inherits AppComponentBase
+
+<PageTitle>@L["Games.Library"]</PageTitle>
+
+<MudStack Spacing="4">
+    <PageHeader
+        Title="@L["Games.Library"]"
+        SubTitle="@($"{GameState.FilteredGames.Count} jeu(x) dans votre bibliothèque")"
+        Icon="@Icons.Material.Filled.SportsEsports"
+        Color="Color.Primary"
+        IsLarge="true">
+
+        <HeaderContent>
+            <MudButton Variant="Variant.Filled"
+                       Color="Color.Primary"
+                       StartIcon="@Icons.Material.Filled.Add"
+                       OnClick="@OpenCreateDialog">
+                Ajouter un jeu
+            </MudButton>
+        </HeaderContent>
+    </PageHeader>
+
+    <GameFilters/>
+
+    @if (GameState.IsLoading)
+    {
+        <MudProgressLinear Indeterminate="true" Color="Color.Primary"/>
+    }
+    else if (GameState.Games.Count == 0)
+    {
+        <EmptyState Title="Votre bibliothèque est vide"
+                    Message="Ajoutez votre premier jeu pour commencer."
+                    Icon="@Icons.Material.Filled.SportsEsports">
+        </EmptyState>
+    }
+    else if (GameState.FilteredGames.Count == 0)
+    {
+        <EmptyState Title="Aucun jeu trouvé"
+                    Message="Essayez de modifier ou réinitialiser vos filtres."
+                    Icon="@Icons.Material.Filled.FilterAltOff"
+                    Color="Color.Secondary">
+            <MudButton Variant="Variant.Filled"
+                       StartIcon="@Icons.Material.Filled.RestartAlt"
+                       OnClick="@GameState.ResetFilters">
+                Réinitialiser les filtres
+            </MudButton>
+        </EmptyState>
+    }
+    else
+    {
+        <GameGrid Games="@GameState.FilteredGames"/>
+    }
+</MudStack>

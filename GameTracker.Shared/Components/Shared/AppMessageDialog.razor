@@ -1,0 +1,30 @@
+@using GameTracker.Shared.UI.Models
+
+<AppDialogShell Title="@Model.Title"
+                Icon="@Model.Icon"
+                Color="@Model.Color"
+                ConfirmText="@Model.ConfirmText"
+                CancelText="@Model.CancelText"
+                Style="min-width: 35%">
+
+    <MudStack Spacing="1">
+        <MudText Typo="Typo.body1">
+            @Model.Message
+        </MudText>
+
+        @if (!string.IsNullOrWhiteSpace(Model.SubTitle))
+        {
+            <MudText Typo="Typo.body2"
+                     Color="Color.Secondary">
+
+                @Model.SubTitle
+
+            </MudText>
+        }
+    </MudStack>
+
+</AppDialogShell>
+
+@code {
+    [Parameter, EditorRequired] public AppMessageDialogModel Model { get; set; } = null!;
+}

@@ -1,0 +1,124 @@
+@using GameTracker.Shared.Components.Shared
+@using GameTracker.Shared.Domain.Enums
+@using GameTracker.Shared.Features.Common
+@using GameTracker.Shared.Features.Common.Dtos
+@using GameTracker.Shared.State
+@using GameTracker.Shared.UI.Enums
+@using GameTracker.Shared.UI.Helpers
+@using GameTracker.Shared.UI.Models
+@inherits AppComponentBase
+
+<AppDialogShell Title="Filters" Icon="@Icons.Material.Filled.FilterList"
+                ConfirmText="Appliquer"
+                OnConfirm="@Confirm"
+                Style="min-width: 35%">
+
+    <MudGrid Class="align-center" Spacing="3">
+
+        <MudItem xs="12" md="4">
+            <MudText Typo="Typo.subtitle2">
+                Platforme :
+            </MudText>
+        </MudItem>
+
+        <MudItem xs="12" md="8">
+            <MudSelect T="string" Variant="Variant.Outlined" @bind-Value="Model.PlatformName" Margin="Margin.Dense">
+                @foreach (LookupItemDto platform in Platforms)
+                {
+                    <MudSelectItem Value="@platform.Name">
+                        @platform.Name
+                    </MudSelectItem>
+                }
+            </MudSelect>
+        </MudItem>
+
+        <MudItem xs="12" md="4">
+            <MudText Typo="Typo.subtitle2">
+                Launcher :
+            </MudText>
+        </MudItem>
+
+        <MudItem xs="12" md="8">
+            <MudSelect T="string?" @bind-Value="Model.LauncherName"
+                       Variant="Variant.Outlined" Margin="Margin.Dense">
+                @foreach (LookupItemDto launcher in Launchers)
+                {
+                    <MudSelectItem Value="@(launcher.Name)">
+                        @launcher.Name
+                    </MudSelectItem>
+                }
+            </MudSelect>
+        </MudItem>
+
+        <MudItem xs="12" md="4">
+            <MudText Typo="Typo.subtitle2">
+                Statut :
+            </MudText>
+        </MudItem>
+
+        <MudItem xs="12" md="8">
+            <MudSelect T="GamePlayStatus?" Variant="Variant.Outlined"
+                       Margin="Margin.Dense" @bind-Value="Model.GamePlayStatus">
+                @foreach (SelectItemDto<GamePlayStatus?> item in SelectHelper.GamePlayStatuses)
+                {
+                    <MudSelectItem Value="@item.Value">
+                        @item.Text
+                    </MudSelectItem>
+                }
+            </MudSelect>
+        </MudItem>
+
+        <MudItem xs="12" md="4">
+            <MudText Typo="Typo.subtitle2">
+                Tri :
+            </MudText>
+        </MudItem>
+
+        <MudItem xs="12" md="8">
+            <MudSelect T="GameSortBy" Variant="Variant.Outlined"
+                       Margin="Margin.Dense" @bind-Value="Model.SortBy">
+                @foreach (SelectItemDto<GameSortBy> item in SelectHelper.GameSortBy)
+                {
+                    <MudSelectItem Value="@item.Value">
+                        @item.Text
+                    </MudSelectItem>
+                }
+            </MudSelect>
+        </MudItem>
+
+        <MudItem xs="12" md="4">
+            <MudText Typo="Typo.subtitle2">
+                Favoris uniquement :
+            </MudText>
+        </MudItem>
+
+        <MudItem xs="12" md="8">
+            <MudToggleIconButton @bind-Toggled="Model.FavoritesOnly"
+                                 Icon="@Icons.Material.Outlined.FavoriteBorder"
+                                 ToggledIcon="@Icons.Material.Filled.Favorite"
+                                 Color="Color.Error"/>
+        </MudItem>
+
+    </MudGrid>
+
+</AppDialogShell>
+
+@code {
+    [CascadingParameter] private IMudDialogInstance MudDialog { get; set; } = null!;
+
+    [Parameter, EditorRequired] public GameFilterModel Model { get; set; } = new();
+
+    [Inject] private GameState GameState { get; set; } = null!;
+    [Inject] private LookupService LookupService { get; set; } = null!;
+
+    private List<LookupItemDto> Platforms { get; set; } = [];
+    private List<LookupItemDto> Launchers { get; set; } = [];
+
+    protected override async Task OnInitializedAsync()
+    {
+        Platforms = await LookupService.GetPlatformsAsync();
+        Launchers = await LookupService.GetLaunchersAsync();
+    }
+
+    private void Confirm() => MudDialog.Close(DialogResult.Ok(Model));
+}

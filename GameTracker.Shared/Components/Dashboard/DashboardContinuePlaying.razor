@@ -1,0 +1,25 @@
+@using GameTracker.Shared.Components.Shared
+@using GameTracker.Shared.Features.Dashboard.Dtos
+
+<MudPaper Class="pa-4" Outlined="true">
+    <MudStack Spacing="3">
+        <PageHeader Title="Continuer à jouer" SubTitle="Continue tes jeux en cours" 
+                    Icon="@Icons.Material.Filled.PlayArrow" Color="Color.Primary"/>
+        
+        <MudDivider/>
+        
+        <MudGrid Justify="Justify.Center" Spacing="2">
+            
+            @foreach (ContinuePlayingGameDto dto in Dtos)
+            {
+                <MudItem xs="12" sm="6">
+                    <ContinuePlayingCard Game="dto"/>
+                </MudItem>
+            }
+        </MudGrid>
+    </MudStack>
+</MudPaper>
+
+@code {
+    [Parameter, EditorRequired] public List<ContinuePlayingGameDto> Dtos { get; set; } = null!;
+}

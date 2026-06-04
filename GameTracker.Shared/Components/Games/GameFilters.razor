@@ -1,0 +1,70 @@
+@using GameTracker.Shared.State
+@using GameTracker.Shared.UI.Models
+@inherits AppComponentBase
+@implements IDisposable
+
+<MudPaper Outlined="true" Class="pa-4">
+    <MudStack Row="true" Class="page-header" Breakpoint="Breakpoint.SmAndDown" Spacing="2">
+
+        <MudTextField T="string" Value="@GameState.Filters.Search" ValueChanged="@OnSearchChanged"
+                      Placeholder="Rechercher un jeu..." Variant="Variant.Outlined"
+                      Margin="Margin.Dense" Adornment="Adornment.Start"
+                      AdornmentIcon="@Icons.Material.Filled.Search"
+                      Immediate="true"/>
+
+        <MudSpacer/>
+
+        <MudStack Row="true">
+            <MudButton Variant="Variant.Filled" Color="Color.Primary"
+                       StartIcon="@Icons.Material.Filled.FilterList"
+                       OnClick="@OpenFilters">
+                Filtres
+            </MudButton>
+
+            <MudButton Variant="Variant.Outlined" Color="Color.Error"
+                       StartIcon="@Icons.Material.Filled.RestartAlt"
+                       Disabled="@(!GameState.HasActiveFilters)"
+                       OnClick="@GameState.ResetFilters">
+                Reset
+            </MudButton>
+        </MudStack>
+    </MudStack>
+</MudPaper>
+
+@code {
+    [Inject] private GameState GameState { get; set; } = null!;
+    [Inject] private IDialogService DialogService { get; set; } = null!;
+
+    protected override void OnInitialized()
+    {
+        GameState.OnChange += StateHasChanged;
+    }
+
+    private void OnSearchChanged(string? value)
+    {
+        GameState.Filters.Search = value ?? string.Empty;
+        GameState.NotifyStateChanged();
+    }
+    
+    public void Dispose()
+    {
+        GameState.OnChange -= StateHasChanged;
+    }
+    
+    private async Task OpenFilters()
+    {
+        DialogParameters parameters = new()
+        {
+            { nameof(GameFilterDialog.Model), GameState.Filters.Clone() },
+        };
+
+        IDialogReference dialog = await DialogService.ShowAsync<GameFilterDialog>("null", parameters);
+
+        DialogResult? result = await dialog.Result;
+
+        if (result is null || result.Canceled || result.Data is not GameFilterModel model)
+            return;
+
+        GameState.ApplyFilters(model);
+    }
+}

@@ -1,0 +1,52 @@
+@using GameTracker.Shared.Features.Dashboard.Dtos
+
+<MudCard Class="pa-3" Outlined="true">
+
+    <MudStack Row Spacing="2">
+
+        <MudImage Src="@Game.CoverUrl"
+                  Height="120"
+                  ObjectFit="ObjectFit.Cover"
+                  Class="rounded"
+                  Style="width: 50%"/>
+
+        <MudStack Spacing="1" Class="py-1" AlignItems="AlignItems.Center" Justify="Justify.SpaceBetween"
+                  Style="flex-grow: 1">
+
+            <MudText Typo="Typo.subtitle2">
+                @Game.Title
+            </MudText>
+
+            <MudText Typo="Typo.caption"
+                     Color="Color.Secondary">
+                @Game.Launcher • @Game.Platform
+            </MudText>
+
+            <MudStack Row Spacing="1">
+
+                <MudChip T="string"
+                         Variant="Variant.Text"
+                         Size="Size.Small">
+                    @Game.PlayedHours h
+                </MudChip>
+
+                @if (Game.Rating is not null)
+                {
+                    <MudChip T="string"
+                             Variant="Variant.Text"
+                             Size="Size.Small">
+                        ★ @Game.Rating
+                    </MudChip>
+                }
+
+            </MudStack>
+
+        </MudStack>
+
+    </MudStack>
+
+</MudCard>
+
+@code {
+    [Parameter, EditorRequired] public ContinuePlayingGameDto Game { get; set; } = null!;
+}

@@ -1,0 +1,41 @@
+@using GameTracker.Web.App.Models
+
+<MudNavMenu Rounded="true" Margin="Margin.Dense" Class="@(IsMini ? "mt-4" : "mt-4 px-2")">
+
+    @foreach (NavigationItem item in NavItems)
+    {
+        @if (IsMini)
+        {
+            <MudTooltip Text="@item.Text" Placement="Placement.Right">
+                <MudNavLink
+                    Href="@item.Href"
+                    Match="@item.Match"
+                    Icon="@item.Icon"
+                    Disabled="@item.Disabled"
+                    Class="mb-2">
+                    @item.Text
+                </MudNavLink>
+            </MudTooltip>
+        }
+        else
+        {
+            <MudNavLink
+                Href="@item.Href"
+                Match="@item.Match"
+                Icon="@item.Icon"
+                Disabled="@item.Disabled"
+                Class="mb-2">
+                @item.Text
+            </MudNavLink>
+        }
+    }
+
+</MudNavMenu>
+
+@code {
+    [Parameter]
+    public IEnumerable<NavigationItem> NavItems { get; set; } = [];
+
+    [Parameter]
+    public bool IsMini { get; set; }
+}

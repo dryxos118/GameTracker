@@ -1,0 +1,46 @@
+@page "/"
+@using GameTracker.Shared.Components.Dashboard
+@using GameTracker.Shared.Components.Shared
+@inherits AppComponentBase
+
+<PageTitle>Dashboard</PageTitle>
+
+<MudStack Spacing="4">
+
+    <PageHeader
+        Title="Dashboard"
+        SubTitle="Vue d'ensemble de votre bibliothèque de jeux."
+        Icon="@Icons.Material.Filled.Dashboard"
+        Color="Color.Primary"
+        IsLarge="true" />
+
+    @if (DashboardState.IsLoading)
+    {
+        <MudProgressCircular Color="Color.Primary"
+                             Style="height:70px;width:70px;"
+                             Indeterminate="true" />
+    }
+    else
+    {
+        @if (DashboardState.Stats is not null)
+        {
+            <DashboardStats Stats="@DashboardState.Stats" />
+        }
+
+        @if (DashboardState.ContinuePlayingGames.Count > 0)
+        {
+            <DashboardContinuePlaying
+                Dtos="@DashboardState.ContinuePlayingGames" />
+        }
+        
+        @if (DashboardState.RecentGames.Count > 0)
+        {
+            <DashboardRecentGames Games="@DashboardState.RecentGames" />
+        }
+        
+        @if (DashboardState.Summary is not null)
+        {
+            <DashboardSummaryCards Summary="@DashboardState.Summary" />
+        }
+    }
+</MudStack>

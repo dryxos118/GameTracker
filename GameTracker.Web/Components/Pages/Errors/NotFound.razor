@@ -1,0 +1,145 @@
+@page "/not-found"
+@using GameTracker.Web.App.Configurations
+@using GameTracker.Web.Components.Layout
+@layout EmptyLayout
+
+<PageTitle>404 - Page introuvable</PageTitle>
+
+<MudContainer MaxWidth="MaxWidth.Medium" Class="py-12">
+    <MudPaper Class="pa-6 pa-md-10" Outlined="true">
+
+        <MudStack Spacing="5"
+                  AlignItems="AlignItems.Center"
+                  Class="text-center">
+
+            <MudIcon Icon="@Icons.Material.Filled.SearchOff"
+                     Size="Size.Large"
+                     Color="Color.Primary"
+                     Style="font-size: 72px;"/>
+
+            <MudChip T="string"
+                     Color="Color.Primary"
+                     Variant="Variant.Outlined">
+                ERROR 404
+            </MudChip>
+
+            <MudStack Spacing="1" AlignItems="AlignItems.Center" Justify="Justify.Center">
+
+                <MudText Typo="Typo.h2"
+                         Class="font-weight-black">
+                    Page introuvable
+                </MudText>
+
+                <MudText Typo="Typo.h6"
+                         Color="Color.Secondary"
+                         Style="max-width: 620px;">
+                    Cette page n'existe pas, a été déplacée
+                    ou le lien est invalide.
+                </MudText>
+
+            </MudStack>
+
+            <MudStack Row="true"
+                      Wrap="Wrap.Wrap"
+                      Justify="Justify.Center"
+                      Spacing="2">
+
+                <MudButton Href="@RoutesConfiguration.Dashboard"
+                           Variant="Variant.Filled"
+                           Color="Color.Primary"
+                           Size="Size.Large"
+                           StartIcon="@Icons.Material.Filled.Dashboard">
+                    Retour au dashboard
+                </MudButton>
+
+                <MudButton Href="@RoutesConfiguration.Games"
+                           Variant="Variant.Outlined"
+                           Color="Color.Primary"
+                           Size="Size.Large"
+                           StartIcon="@Icons.Material.Filled.VideogameAsset">
+                    Bibliothèque
+                </MudButton>
+
+            </MudStack>
+
+            <MudDivider/>
+
+            <MudGrid Spacing="3">
+
+                <MudItem xs="12" sm="4">
+                    <MudPaper Class="pa-4 h-100"
+                              Outlined="true">
+
+                        <MudStack Spacing="2">
+
+                            <MudAvatar Color="Color.Primary"
+                                       Variant="Variant.Filled">
+                                <MudIcon Icon="@Icons.Material.Filled.Dashboard"/>
+                            </MudAvatar>
+
+                            <MudText Typo="Typo.subtitle1">
+                                Dashboard
+                            </MudText>
+
+                            <MudText Typo="Typo.body2"
+                                     Color="Color.Secondary">
+                                Vue globale de la bibliothèque.
+                            </MudText>
+
+                        </MudStack>
+                    </MudPaper>
+                </MudItem>
+
+                <MudItem xs="12" sm="4">
+                    <MudPaper Class="pa-4 h-100"
+                              Outlined="true">
+
+                        <MudStack Spacing="2">
+
+                            <MudAvatar Color="Color.Primary"
+                                       Variant="Variant.Filled">
+                                <MudIcon Icon="@Icons.Material.Filled.VideogameAsset"/>
+                            </MudAvatar>
+
+                            <MudText Typo="Typo.subtitle1">
+                                Bibliothèque
+                            </MudText>
+
+                            <MudText Typo="Typo.body2"
+                                     Color="Color.Secondary">
+                                Tous tes jeux regroupés.
+                            </MudText>
+
+                        </MudStack>
+                    </MudPaper>
+                </MudItem>
+
+                <MudItem xs="12" sm="4">
+                    <MudPaper Class="pa-4 h-100"
+                              Outlined="true">
+
+                        <MudStack Spacing="2">
+
+                            <MudAvatar Color="Color.Primary"
+                                       Variant="Variant.Filled">
+                                <MudIcon Icon="@Icons.Material.Filled.FavoriteBorder"/>
+                            </MudAvatar>
+
+                            <MudText Typo="Typo.subtitle1">
+                                Wishlist
+                            </MudText>
+
+                            <MudText Typo="Typo.body2"
+                                     Color="Color.Secondary">
+                                Les prochains jeux à découvrir.
+                            </MudText>
+
+                        </MudStack>
+                    </MudPaper>
+                </MudItem>
+
+            </MudGrid>
+
+        </MudStack>
+    </MudPaper>
+</MudContainer>

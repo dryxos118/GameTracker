@@ -1,0 +1,162 @@
+@using GameTracker.Shared.Features.Games.Dtos
+@using GameTracker.Shared.UI.Enums
+
+<MudStack Spacing="3">
+
+    <MudStack Justify="Justify.Center"
+              AlignItems="AlignItems.Center">
+
+        @if (!string.IsNullOrWhiteSpace(PreviewCoverUrl))
+        {
+            <MudImage Src="@PreviewCoverUrl"
+                      Alt="@Model.Title"
+                      Class="game-cover-preview"
+                      FallbackSrc=""/>
+        }
+        else
+        {
+            <MudPaper Outlined="true"
+                      Class="game-cover-preview game-cover-preview-empty">
+
+                <MudStack AlignItems="AlignItems.Center"
+                          Justify="Justify.Center"
+                          Spacing="1">
+
+                    <MudIcon Icon="@Icons.Material.Filled.BrokenImage"
+                             Size="Size.Large"
+                             Color="Color.Secondary"/>
+
+                    <MudText Typo="Typo.body2"
+                             Color="Color.Secondary">
+                        Image introuvable
+                    </MudText>
+
+                </MudStack>
+
+            </MudPaper>
+        }
+
+    </MudStack>
+
+    <MudGrid Spacing="3"
+             Class="align-center">
+
+        <MudItem xs="12" md="3">
+            <MudText Typo="Typo.subtitle2" Class="field-label field-label-required">
+                Titre :
+            </MudText>
+        </MudItem>
+
+        <MudItem xs="12" md="9">
+            <MudTextField @bind-Value="Model.Title"
+                          Variant="Variant.Outlined"
+                          Margin="Margin.Dense"
+                          Required="true"/>
+        </MudItem>
+
+        <MudItem xs="12" md="3">
+            <MudText Typo="Typo.subtitle2" Class="field-label">
+                Couverture :
+            </MudText>
+        </MudItem>
+
+        <MudItem xs="12" md="9">
+
+            <MudGrid Spacing="2"
+                     Class="align-center">
+
+                <MudItem xs="12" md="4">
+                    <MudRadioGroup @bind-Value="Model.CoverSource">
+                        <MudStack Row="true"
+                                  Spacing="2">
+
+                            <MudRadio Value="GameCoverSource.Url">
+                                URL
+                            </MudRadio>
+
+                            <MudRadio Value="GameCoverSource.SteamAppId">
+                                Steam
+                            </MudRadio>
+
+                        </MudStack>
+                    </MudRadioGroup>
+                </MudItem>
+
+                <MudItem xs="12" md="8">
+
+                    @if (Model.CoverSource == GameCoverSource.Url)
+                    {
+                        <MudTextField @bind-Value="Model.CoverUrl"
+                                      Variant="Variant.Outlined"
+                                      Margin="Margin.Dense"
+                                      Immediate="true"/>
+                    }
+                    else
+                    {
+                        <MudNumericField @bind-Value="Model.SteamAppId"
+                                         Variant="Variant.Outlined"
+                                         Margin="Margin.Dense"
+                                         Min="0"
+                                         Immediate="true"
+                                         HideSpinButtons="true"/>
+                    }
+
+                </MudItem>
+
+            </MudGrid>
+
+        </MudItem>
+
+        <MudItem xs="12" md="3">
+            <MudText Typo="Typo.subtitle2" Class="field-label">
+                Description :
+            </MudText>
+        </MudItem>
+
+        <MudItem xs="12" md="9">
+            <MudTextField @bind-Value="Model.Description" Variant="Variant.Outlined" 
+                          Lines="2"
+                          MaxLines="4"
+                          Sizing="InputSizing.Auto"
+            />
+        </MudItem>
+
+        <MudItem xs="12" md="3">
+            <MudText Typo="Typo.subtitle2" Class="field-label">
+                Date de sortie :
+            </MudText>
+        </MudItem>
+
+        <MudItem xs="12" md="9">
+            <MudDatePicker @bind-Date="ReleaseDate"
+                           Variant="Variant.Outlined"
+                           Margin="Margin.Dense"/>
+        </MudItem>
+
+    </MudGrid>
+
+</MudStack>
+
+@code {
+    [Parameter, EditorRequired] public GameFormDto Model { get; set; } = null!;
+
+    private string? PreviewCoverUrl =>
+        Model.CoverSource switch
+        {
+            GameCoverSource.Url => Model.CoverUrl,
+
+            GameCoverSource.SteamAppId when Model.SteamAppId is not null =>
+                $"https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/{Model.SteamAppId}/header.jpg",
+
+            _ => null
+        };
+
+    private DateTime? ReleaseDate
+    {
+        get => Model.ReleaseDate?.ToDateTime(TimeOnly.MinValue);
+        set => Model.ReleaseDate = value is null
+            ? null
+            : DateOnly.FromDateTime(value.Value);
+    }
+
+}

@@ -1,0 +1,48 @@
+@page "/taxonomy"
+@using GameTracker.Shared.Components.Shared
+@inherits AppComponentBase
+
+<PageTitle>Genres & Tags</PageTitle>
+
+<MudStack Spacing="4">
+    <PageHeader
+        Title="Genres & tags"
+        SubTitle="Organisez vos jeux avec des genres et des tags personnalisés."
+        Icon="@Icons.Material.Filled.Category"
+        Color="Color.Secondary" 
+        IsLarge="true"/>
+
+    <MudGrid>
+        <MudItem xs="12" md="6">
+            <MudPaper Class="pa-4 h-100" Outlined="true">
+                <MudText Typo="Typo.h6">
+                    Genres
+                </MudText>
+
+                <MudList T="string" Dense="true">
+                    <MudListItem>RPG</MudListItem>
+                    <MudListItem>FPS</MudListItem>
+                    <MudListItem>Simulation</MudListItem>
+                    <MudListItem>Sandbox</MudListItem>
+                    <MudListItem>Adventure</MudListItem>
+                </MudList>
+            </MudPaper>
+        </MudItem>
+
+        <MudItem xs="12" md="6">
+            <MudPaper Class="pa-4 h-100" Outlined="true">
+                <MudText Typo="Typo.h6">
+                    Tags
+                </MudText>
+
+                <MudList T="string" Dense="true">
+                    <MudListItem>Open World</MudListItem>
+                    <MudListItem>Fantasy</MudListItem>
+                    <MudListItem>Coop</MudListItem>
+                    <MudListItem>Sci-Fi</MudListItem>
+                    <MudListItem>Linux Friendly</MudListItem>
+                </MudList>
+            </MudPaper>
+        </MudItem>
+    </MudGrid>
+</MudStack>

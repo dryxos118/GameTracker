@@ -1,0 +1,23 @@
+@page "/settings"
+@using GameTracker.Shared.Components.Settings
+@using GameTracker.Shared.Components.Shared
+@using GameTracker.Web.Components.Settings
+@inherits AppComponentBase
+
+
+<PageTitle>@L["Settings.Title"]</PageTitle>
+
+<MudStack Spacing="4">
+    <PageHeader
+        Title="@L["Settings.Title"]"
+        SubTitle="@L["Settings.Subtitle"]"
+        Icon="@Icons.Material.Filled.Settings"
+        Color="Color.Secondary" 
+        IsLarge="true"/>
+
+    <AppearanceSettingsSection />
+
+    <DatabaseSettingsSection />
+
+    <ApplicationSettingsSection />
+</MudStack>
