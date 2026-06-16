@@ -1,4 +1,3 @@
-using GameTracker.Shared.Domain.Enums;
 using GameTracker.Shared.Features.Games;
 using GameTracker.Shared.Features.Games.Dtos;
 using GameTracker.Shared.UI.Enums;
@@ -10,14 +9,12 @@ public sealed class GameState(GameService gameService)
 {
     private readonly GameService _gameService = gameService;
 
-    public event Action? OnChange;
-    
     public bool IsLoading { get; private set; }
 
     public List<GameListItemDto> Games { get; private set; } = [];
 
     public GameFilterModel Filters { get; private set; } = new();
-    
+
     public bool HasActiveFilters =>
         !string.IsNullOrWhiteSpace(Filters.Search)
         || !string.IsNullOrWhiteSpace(Filters.PlatformName)
@@ -33,10 +30,8 @@ public sealed class GameState(GameService gameService)
             IEnumerable<GameListItemDto> query = Games;
 
             if (!string.IsNullOrWhiteSpace(Filters.Search))
-            {
                 query = query
                     .Where(x => x.Title.Contains(Filters.Search, StringComparison.OrdinalIgnoreCase));
-            }
 
             if (!string.IsNullOrWhiteSpace(Filters.PlatformName))
                 query = query.Where(x => x.PlatformName == Filters.PlatformName);
@@ -61,6 +56,8 @@ public sealed class GameState(GameService gameService)
             return query.ToList();
         }
     }
+
+    public event Action? OnChange;
 
     public async Task LoadAsync()
     {

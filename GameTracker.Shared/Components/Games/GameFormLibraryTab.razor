@@ -1,8 +1,7 @@
 @using GameTracker.Shared.Domain.Enums
+@using GameTracker.Shared.Features.Common.Dtos
 @using GameTracker.Shared.Features.Games.Dtos
 @using GameTracker.Shared.UI.Helpers
-@using GameTracker.Shared.UI.Models
-
 <MudGrid Class="align-center" Spacing="3">
 
     <MudItem xs="12" md="3">
@@ -15,7 +14,8 @@
         <MudSelect T="GameLibraryStatus"
                    Variant="Variant.Outlined"
                    Margin="Margin.Dense"
-                   @bind-Value="Model.LibraryStatus">
+                   @bind-Value="Model.LibraryStatus"
+                   ReadOnly="@ReadOnly">
 
             @foreach (SelectItemDto<GameLibraryStatus> item in SelectHelper.GameLibraryStatuses)
             {
@@ -37,7 +37,8 @@
         <MudSelect T="GamePlayStatus?"
                    Variant="Variant.Outlined"
                    Margin="Margin.Dense"
-                   @bind-Value="Model.PlayStatus">
+                   @bind-Value="Model.PlayStatus"
+                   ReadOnly="@ReadOnly">
 
             @foreach (SelectItemDto<GamePlayStatus?> item in SelectHelper.GamePlayStatuses)
             {
@@ -61,7 +62,8 @@
                          Margin="Margin.Dense"
                          Min="0"
                          HideSpinButtons="true"
-                         @bind-Value="Model.PlayedHours" />
+                         @bind-Value="Model.PlayedHours"
+                         ReadOnly="@ReadOnly"/>
     </MudItem>
 
     <MudItem xs="12" md="3">
@@ -71,7 +73,7 @@
     </MudItem>
 
     <MudItem xs="12" md="9">
-        <MudRating @bind-SelectedValue="Model.Rating" MaxValue="10"/>
+        <MudRating @bind-SelectedValue="Model.Rating" MaxValue="10" ReadOnly="@ReadOnly"/>
     </MudItem>
 
     <MudItem xs="12" md="3">
@@ -84,12 +86,13 @@
         <MudToggleIconButton @bind-Toggled="Model.IsFavorite"
                              Icon="@Icons.Material.Outlined.FavoriteBorder"
                              ToggledIcon="@Icons.Material.Filled.Favorite"
-                             Color="Color.Error" />
+                             Color="Color.Error"
+                             Disabled="@ReadOnly"/>
     </MudItem>
 
 </MudGrid>
 
 @code {
-    [Parameter, EditorRequired]
-    public GameFormDto Model { get; set; } = null!;
+    [Parameter][EditorRequired] public GameFormDto Model { get; set; } = null!;
+    [Parameter] public bool ReadOnly { get; set; }
 }

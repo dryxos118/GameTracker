@@ -2,7 +2,6 @@
 @using GameTracker.Shared.Features.Common.Dtos
 @using GameTracker.Shared.Features.Games.Dtos
 @using GameTracker.Shared.UI.Helpers
-@using GameTracker.Shared.UI.Models
 @inherits AppComponentBase
 
 <MudGrid Spacing="3" Class="align-center">
@@ -14,11 +13,14 @@
     </MudItem>
 
     <MudItem xs="12" md="9">
-        <MudSelect T="int?" Variant="Variant.Outlined" @bind-Value="Model.PlatformId" Margin="Margin.Dense">
-            @foreach (LookupItemDto platform in Platforms)
+        <MudSelect T="int?" Variant="Variant.Outlined"
+                   @bind-Value="Model.PlatformId"
+                   Margin="Margin.Dense"
+                   ReadOnly="@ReadOnly">
+            @foreach (SelectItemDto<int> platform in Platforms)
             {
-                <MudSelectItem Value="@((int?)platform.Id)">
-                    @platform.Name
+                <MudSelectItem Value="@((int?)platform.Value)">
+                    @platform.Text
                 </MudSelectItem>
             }
         </MudSelect>
@@ -34,11 +36,12 @@
         <MudSelect T="int?"
                    @bind-Value="Model.LauncherId"
                    Variant="Variant.Outlined"
-                   Margin="Margin.Dense">
-            @foreach (LookupItemDto launcher in Launchers)
+                   Margin="Margin.Dense"
+                   ReadOnly="@ReadOnly">
+            @foreach (SelectItemDto<int> launcher in Launchers)
             {
-                <MudSelectItem Value="@((int?)launcher.Id)">
-                    @launcher.Name
+                <MudSelectItem Value="@((int?)launcher.Value)">
+                    @launcher.Text
                 </MudSelectItem>
             }
         </MudSelect>
@@ -52,7 +55,8 @@
 
     <MudItem xs="12" md="9">
         <MudSelect T="GameMode" @bind-Value="Model.Modes"
-                   Variant="Variant.Outlined" Margin="Margin.Dense">
+                   Variant="Variant.Outlined" Margin="Margin.Dense"
+                   ReadOnly="@ReadOnly">
             @foreach (SelectItemDto<GameMode> mode in SelectHelper.GameModes)
             {
                 <MudSelectItem Value="@mode.Value">
@@ -73,11 +77,12 @@
                    Variant="Variant.Outlined" Margin="Margin.Dense"
                    MultiSelection="true" SelectedValues="Model.GenreIds"
                    SelectedValuesChanged="OnGenresChanged"
-                   ToStringFunc="GetGenreName">
-            @foreach (LookupItemDto genre in Genres)
+                   ToStringFunc="GetGenreName"
+                   ReadOnly="@ReadOnly">
+            @foreach (SelectItemDto<int> genre in Genres)
             {
-                <MudSelectItem Value="@genre.Id">
-                    @genre.Name
+                <MudSelectItem Value="@genre.Value">
+                    @genre.Text
                 </MudSelectItem>
             }
         </MudSelect>
@@ -90,15 +95,16 @@
     </MudItem>
 
     <MudItem xs="12" md="9">
-        <MudSelect T="int" 
+        <MudSelect T="int"
                    Variant="Variant.Outlined" Margin="Margin.Dense"
                    MultiSelection="true" SelectedValues="Model.TagIds"
                    SelectedValuesChanged="OnTagsChanged"
-                   ToStringFunc="GetTagName">
-            @foreach (LookupItemDto tag in Tags)
+                   ToStringFunc="GetTagName"
+                   ReadOnly="@ReadOnly">
+            @foreach (SelectItemDto<int> tag in Tags)
             {
-                <MudSelectItem Value="@tag.Id">
-                    @tag.Name
+                <MudSelectItem Value="@tag.Value">
+                    @tag.Text
                 </MudSelectItem>
             }
         </MudSelect>
@@ -107,15 +113,16 @@
 </MudGrid>
 
 @code {
-    [Parameter, EditorRequired] public GameFormDto Model { get; set; } = null!;
-    [Parameter] public List<LookupItemDto> Platforms { get; set; } = [];
-    [Parameter] public List<LookupItemDto> Launchers { get; set; } = [];
-    [Parameter] public List<LookupItemDto> Genres { get; set; } = [];
-    [Parameter] public List<LookupItemDto> Tags { get; set; } = [];
+    [Parameter][EditorRequired] public GameFormDto Model { get; set; } = null!;
+    [Parameter] public bool ReadOnly { get; set; }
+    [Parameter] public List<SelectItemDto<int>> Platforms { get; set; } = [];
+    [Parameter] public List<SelectItemDto<int>> Launchers { get; set; } = [];
+    [Parameter] public List<SelectItemDto<int>> Genres { get; set; } = [];
+    [Parameter] public List<SelectItemDto<int>> Tags { get; set; } = [];
 
     private string GetGenreName(int id)
     {
-        return Genres.FirstOrDefault(x => x.Id == id)?.Name ?? string.Empty;
+        return Genres.FirstOrDefault(x => x.Value == id)?.Text ?? string.Empty;
     }
 
     private void OnGenresChanged(IReadOnlyCollection<int>? values)
@@ -126,7 +133,7 @@
 
     private string GetTagName(int id)
     {
-        return Tags.FirstOrDefault(x => x.Id == id)?.Name ?? string.Empty;
+        return Tags.FirstOrDefault(x => x.Value == id)?.Text ?? string.Empty;
     }
 
     private void OnTagsChanged(IReadOnlyCollection<int>? values)

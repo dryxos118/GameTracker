@@ -6,7 +6,7 @@ namespace GameTracker.Shared.Components.Shared;
 
 public partial class PageHeader : AppComponentBase
 {
-    [Parameter, EditorRequired] public string Title { get; set; } = string.Empty;
+    [Parameter] [EditorRequired] public string Title { get; set; } = string.Empty;
 
     [Parameter] public string? SubTitle { get; set; } = string.Empty;
 
@@ -14,7 +14,7 @@ public partial class PageHeader : AppComponentBase
 
     [Parameter] public Color Color { get; set; } = Color.Primary;
 
-    [Parameter] public bool IsLarge { get; set; } = false;
+    [Parameter] public bool IsLarge { get; set; }
 
     [Parameter] public RenderFragment? HeaderContent { get; set; }
 }

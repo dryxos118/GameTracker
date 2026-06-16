@@ -19,6 +19,6 @@ public class GameListItemDto
 
     public int PlayedHours { get; set; }
     public int? Rating { get; set; }
-    
+
     public DateTime AddedAt { get; set; }
 }

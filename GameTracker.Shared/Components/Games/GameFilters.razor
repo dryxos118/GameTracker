@@ -1,6 +1,6 @@
+@inherits AppComponentBase
 @using GameTracker.Shared.State
 @using GameTracker.Shared.UI.Models
-@inherits AppComponentBase
 @implements IDisposable
 
 <MudPaper Outlined="true" Class="pa-4">
@@ -45,17 +45,17 @@
         GameState.Filters.Search = value ?? string.Empty;
         GameState.NotifyStateChanged();
     }
-    
+
     public void Dispose()
     {
         GameState.OnChange -= StateHasChanged;
     }
-    
+
     private async Task OpenFilters()
     {
         DialogParameters parameters = new()
         {
-            { nameof(GameFilterDialog.Model), GameState.Filters.Clone() },
+            { nameof(GameFilterDialog.Model), GameState.Filters.Clone() }
         };
 
         IDialogReference dialog = await DialogService.ShowAsync<GameFilterDialog>("null", parameters);
@@ -67,4 +67,5 @@
 
         GameState.ApplyFilters(model);
     }
+
 }

@@ -12,7 +12,7 @@ public partial class DatabaseSettingsSection : AppComponentBase
     [Inject] private SettingsService SettingsService { get; set; } = null!;
 
     [Inject] private ISnackbar Snackbar { get; set; } = null!;
-    
+
     private async Task SeedDemoData()
     {
         SeedResult result = await SettingsService.SeedDemoDataAsync();

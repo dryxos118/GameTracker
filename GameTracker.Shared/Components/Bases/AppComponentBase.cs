@@ -6,9 +6,8 @@ namespace GameTracker.Shared.Components.Bases;
 
 public class AppComponentBase : ComponentBase
 {
+    protected bool IsInitialized;
     [Inject] public IStringLocalizer<AppLocalization> L { get; set; } = null!;
-
-    protected bool IsInitialized = false;
 
     protected override async Task OnInitializedAsync()
     {
@@ -17,10 +16,7 @@ public class AppComponentBase : ComponentBase
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        if (firstRender)
-        {
-            IsInitialized = true;
-        }
+        if (firstRender) IsInitialized = true;
 
         await base.OnAfterRenderAsync(firstRender);
     }

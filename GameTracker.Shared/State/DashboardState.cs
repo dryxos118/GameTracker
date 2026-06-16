@@ -36,7 +36,7 @@ public sealed class DashboardState(DashBoardService dashBoardService)
 
     public async Task RefreshAsync()
     {
-        await LoadAsync(forceRefresh: true);
+        await LoadAsync(true);
     }
 
     public void Clear()

@@ -1,6 +1,5 @@
 @using GameTracker.Shared.Components.Shared
 @using GameTracker.Shared.Features.Dashboard.Dtos
-
 <MudPaper Class="pa-4" Outlined="true">
 
     <MudStack Spacing="3">
@@ -16,7 +15,7 @@
             @foreach (RecentGameDto game in Games)
             {
                 <MudItem xs="12" md="6">
-                    <RecentGameItem Game="game" />
+                    <RecentGameItem Game="game"/>
                 </MudItem>
             }
 
@@ -27,5 +26,5 @@
 </MudPaper>
 
 @code {
-    [Parameter, EditorRequired] public List<RecentGameDto> Games { get; set; } = null!;
+    [Parameter][EditorRequired] public List<RecentGameDto> Games { get; set; } = null!;
 }

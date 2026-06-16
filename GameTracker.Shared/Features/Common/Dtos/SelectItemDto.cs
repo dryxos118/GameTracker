@@ -1,4 +1,4 @@
-namespace GameTracker.Shared.UI.Models;
+namespace GameTracker.Shared.Features.Common.Dtos;
 
 public sealed class SelectItemDto<TValue>
 {

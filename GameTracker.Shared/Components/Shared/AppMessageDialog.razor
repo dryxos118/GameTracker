@@ -1,5 +1,4 @@
 @using GameTracker.Shared.UI.Models
-
 <AppDialogShell Title="@Model.Title"
                 Icon="@Model.Icon"
                 Color="@Model.Color"
@@ -26,5 +25,5 @@
 </AppDialogShell>
 
 @code {
-    [Parameter, EditorRequired] public AppMessageDialogModel Model { get; set; } = null!;
+    [Parameter][EditorRequired] public AppMessageDialogModel Model { get; set; } = null!;
 }

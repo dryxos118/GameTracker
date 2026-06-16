@@ -9,10 +9,10 @@ public class Game
     public string Title { get; set; } = null!;
     public string? Description { get; set; }
     public string? CoverUrl { get; set; }
-    
+
     public GameLibraryStatus LibraryStatus { get; set; } = GameLibraryStatus.Library;
     public GamePlayStatus? PlayStatus { get; set; } = GamePlayStatus.Backlog;
-    
+
     public GameMode Modes { get; set; } = GameMode.Solo;
 
     public bool IsFavorite { get; set; }
@@ -21,7 +21,7 @@ public class Game
     public int PlayedHours { get; set; }
 
     public DateOnly? ReleaseDate { get; set; }
-    
+
     public DateTime AddedAt { get; set; } = DateTime.UtcNow;
     public DateTime? UpdatedAt { get; set; }
 

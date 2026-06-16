@@ -1,6 +1,5 @@
 @using GameTracker.Shared.Components.Shared
 @using GameTracker.Shared.Features.Dashboard.Dtos
-
 <MudGrid Spacing="2">
 
     <MudItem xs="12" sm="6" md="3">
@@ -42,5 +41,5 @@
 </MudGrid>
 
 @code {
-    [Parameter, EditorRequired] public DashboardSummaryDto Summary { get; set; } = null!;
+    [Parameter][EditorRequired] public DashboardSummaryDto Summary { get; set; } = null!;
 }

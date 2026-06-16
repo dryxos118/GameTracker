@@ -2,8 +2,8 @@
 @using GameTracker.Shared.Domain.Enums
 @using GameTracker.Shared.Features.Games
 @using GameTracker.Shared.Features.Games.Dtos
+@using GameTracker.Shared.UI.Enums
 @using GameTracker.Shared.UI.Models
-
 <MudCard Outlined="true" Class="game-card">
 
     <div class="game-card-cover">
@@ -39,7 +39,8 @@
         <MudMenu Size="Size.Medium" Icon="@Icons.Material.Filled.MoreVert"
                  Class="game-card-menu">
 
-            <MudMenuItem Icon="@Icons.Material.Filled.Visibility">
+            <MudMenuItem Icon="@Icons.Material.Filled.Visibility"
+                         OnClick="@(async () => await GameDetail())">
                 Détails
             </MudMenuItem>
 
@@ -122,7 +123,7 @@
 </MudCard>
 
 @code {
-    [Parameter, EditorRequired] public GameListItemDto Game { get; set; } = null!;
+    [Parameter][EditorRequired] public GameListItemDto Game { get; set; } = null!;
     [Inject] private GameService GameService { get; set; } = null!;
     [Inject] private IDialogService DialogService { get; set; } = null!;
     [Inject] private ISnackbar Snackbar { get; set; } = null!;
@@ -140,12 +141,28 @@
         };
     }
 
+    private async Task GameDetail()
+    {
+        DialogParameters parameters = new()
+        {
+            [nameof(GameFormDialog.Title)] = Game.Title,
+            [nameof(GameFormDialog.GameId)] = Game.Id,
+            [nameof(GameFormDialog.Mode)] = DialogMode.ReadOnly
+        };
+
+        IDialogReference dialog = await DialogService.ShowAsync<GameFormDialog>(null, parameters,
+            new DialogOptions { BackdropClick = false, CloseOnEscapeKey = false });
+
+        DialogResult? result = await dialog.Result;
+    }
+
     private async Task UpdateGame()
     {
         DialogParameters parameters = new()
         {
             [nameof(GameFormDialog.Title)] = "Modifier un jeu",
-            [nameof(GameFormDialog.GameId)] = Game.Id
+            [nameof(GameFormDialog.GameId)] = Game.Id,
+            [nameof(GameFormDialog.Mode)] = DialogMode.Edit
         };
 
         IDialogReference dialog = await DialogService.ShowAsync<GameFormDialog>(

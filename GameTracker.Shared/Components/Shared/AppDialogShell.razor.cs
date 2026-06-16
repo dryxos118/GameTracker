@@ -8,7 +8,7 @@ public partial class AppDialogShell : AppComponentBase
 {
     [CascadingParameter] private IMudDialogInstance MudDialog { get; set; } = null!;
 
-    [Parameter, EditorRequired] public string Title { get; set; } = string.Empty;
+    [Parameter] [EditorRequired] public string Title { get; set; } = string.Empty;
     [Parameter] public string Icon { get; set; } = Icons.Material.Filled.SportsEsports;
     [Parameter] public Color Color { get; set; } = Color.Primary;
 
@@ -16,10 +16,13 @@ public partial class AppDialogShell : AppComponentBase
     [Parameter] public string CancelText { get; set; } = "Annuler";
     [Parameter] public string? Style { get; set; }
 
-    [Parameter, EditorRequired] public RenderFragment ChildContent { get; set; } = null!;
+    [Parameter] [EditorRequired] public RenderFragment ChildContent { get; set; } = null!;
     [Parameter] public EventCallback OnConfirm { get; set; }
 
-    private void Cancel() => MudDialog.Cancel();
+    private void Cancel()
+    {
+        MudDialog.Cancel();
+    }
 
     private async Task Confirm()
     {

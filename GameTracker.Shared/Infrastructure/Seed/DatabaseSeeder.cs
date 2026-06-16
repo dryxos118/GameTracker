@@ -181,11 +181,11 @@ public static class DatabaseSeeder
         }
 
         return new SeedResult(
-            HasSeeded: platforms + launchers + genres + tags + games > 0,
-            Platforms: platforms,
-            Launchers: launchers,
-            Genres: genres,
-            Tags: tags,
-            Games: games);
+            platforms + launchers + genres + tags + games > 0,
+            platforms,
+            launchers,
+            genres,
+            tags,
+            games);
     }
 }

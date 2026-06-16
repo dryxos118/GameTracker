@@ -21,7 +21,7 @@ public sealed class GameFilterModel
             LauncherName = LauncherName,
             GamePlayStatus = GamePlayStatus,
             FavoritesOnly = FavoritesOnly,
-            SortBy = SortBy,
+            SortBy = SortBy
         };
     }
 }

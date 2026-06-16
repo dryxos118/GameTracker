@@ -12,9 +12,9 @@ public sealed class SettingsService(
     DashboardState dashboardState
 )
 {
-    private readonly IDbContextFactory<AppDbContext> _dbContextFactory = dbContextFactory;
-    private readonly DatabaseState _databaseState = databaseState;
     private readonly DashboardState _dashboardState = dashboardState;
+    private readonly DatabaseState _databaseState = databaseState;
+    private readonly IDbContextFactory<AppDbContext> _dbContextFactory = dbContextFactory;
 
     public async Task<SeedResult> SeedDemoDataAsync()
     {
@@ -42,10 +42,7 @@ public sealed class SettingsService(
 
         SeedResult? seedResult = null;
 
-        if (seedDemoData)
-        {
-            seedResult = await DatabaseSeeder.SeedAsync(context);
-        }
+        if (seedDemoData) seedResult = await DatabaseSeeder.SeedAsync(context);
 
         context.ChangeTracker.Clear();
 
@@ -53,7 +50,7 @@ public sealed class SettingsService(
         _dashboardState.Clear();
 
         return new ResetDatabaseResult(
-            SeedDemoData: seedDemoData,
-            SeedResult: seedResult);
+            seedDemoData,
+            seedResult);
     }
 }

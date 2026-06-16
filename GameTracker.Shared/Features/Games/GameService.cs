@@ -30,7 +30,7 @@ public sealed class GameService(AppDbContext context, DashboardState dashboardSt
                 IsFavorite = x.IsFavorite,
                 PlayedHours = x.PlayedHours,
                 Rating = x.Rating,
-                AddedAt = x.AddedAt,
+                AddedAt = x.AddedAt
             })
             .ToListAsync();
     }

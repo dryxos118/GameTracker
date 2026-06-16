@@ -1,7 +1,7 @@
 @using GameTracker.Shared.Components.Shared
 @using GameTracker.Shared.Domain.Enums
-@using GameTracker.Shared.Features.Common
 @using GameTracker.Shared.Features.Common.Dtos
+@using GameTracker.Shared.Features.Platforms
 @using GameTracker.Shared.State
 @using GameTracker.Shared.UI.Enums
 @using GameTracker.Shared.UI.Helpers
@@ -23,10 +23,10 @@
 
         <MudItem xs="12" md="8">
             <MudSelect T="string" Variant="Variant.Outlined" @bind-Value="Model.PlatformName" Margin="Margin.Dense">
-                @foreach (LookupItemDto platform in Platforms)
+                @foreach (SelectItemDto<int> platform in Platforms)
                 {
-                    <MudSelectItem Value="@platform.Name">
-                        @platform.Name
+                    <MudSelectItem Value="@platform.Text">
+                        @platform.Text
                     </MudSelectItem>
                 }
             </MudSelect>
@@ -41,10 +41,10 @@
         <MudItem xs="12" md="8">
             <MudSelect T="string?" @bind-Value="Model.LauncherName"
                        Variant="Variant.Outlined" Margin="Margin.Dense">
-                @foreach (LookupItemDto launcher in Launchers)
+                @foreach (SelectItemDto<int> launcher in Launchers)
                 {
-                    <MudSelectItem Value="@(launcher.Name)">
-                        @launcher.Name
+                    <MudSelectItem Value="@(launcher.Text)">
+                        @launcher.Text
                     </MudSelectItem>
                 }
             </MudSelect>
@@ -106,19 +106,23 @@
 @code {
     [CascadingParameter] private IMudDialogInstance MudDialog { get; set; } = null!;
 
-    [Parameter, EditorRequired] public GameFilterModel Model { get; set; } = new();
+    [Parameter][EditorRequired] public GameFilterModel Model { get; set; } = new();
 
     [Inject] private GameState GameState { get; set; } = null!;
-    [Inject] private LookupService LookupService { get; set; } = null!;
+    [Inject] private PlatformService PlatformService { get; set; } = null!;
 
-    private List<LookupItemDto> Platforms { get; set; } = [];
-    private List<LookupItemDto> Launchers { get; set; } = [];
+    private List<SelectItemDto<int>> Platforms { get; set; } = [];
+    private List<SelectItemDto<int>> Launchers { get; set; } = [];
 
     protected override async Task OnInitializedAsync()
     {
-        Platforms = await LookupService.GetPlatformsAsync();
-        Launchers = await LookupService.GetLaunchersAsync();
+        Platforms = await PlatformService.GetPlatformSelectItemsAsync();
+        Launchers = await PlatformService.GetLauncherSelectItemsAsync();
     }
 
-    private void Confirm() => MudDialog.Close(DialogResult.Ok(Model));
+    private void Confirm()
+    {
+        MudDialog.Close(DialogResult.Ok(Model));
+    }
+
 }

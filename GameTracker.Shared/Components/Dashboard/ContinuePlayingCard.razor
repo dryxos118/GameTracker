@@ -1,5 +1,4 @@
 @using GameTracker.Shared.Features.Dashboard.Dtos
-
 <MudCard Class="pa-3" Outlined="true">
 
     <MudStack Row Spacing="2">
@@ -48,5 +47,5 @@
 </MudCard>
 
 @code {
-    [Parameter, EditorRequired] public ContinuePlayingGameDto Game { get; set; } = null!;
+    [Parameter][EditorRequired] public ContinuePlayingGameDto Game { get; set; } = null!;
 }

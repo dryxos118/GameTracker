@@ -1,6 +1,6 @@
 using GameTracker.Shared.Domain.Enums;
+using GameTracker.Shared.Features.Common.Dtos;
 using GameTracker.Shared.UI.Enums;
-using GameTracker.Shared.UI.Models;
 
 namespace GameTracker.Shared.UI.Helpers;
 
@@ -28,7 +28,7 @@ public static class SelectHelper
         new("Multijoueur", GameMode.Multiplayer),
         new("Coop", GameMode.Coop),
         new("En ligne", GameMode.Online),
-        new("Local", GameMode.LocalMultiplayer),
+        new("Local", GameMode.LocalMultiplayer)
     ];
 
     public static readonly List<SelectItemDto<GameSortBy>> GameSortBy =
@@ -36,6 +36,6 @@ public static class SelectHelper
         new("Récents", Enums.GameSortBy.Recent),
         new("Titre", Enums.GameSortBy.Title),
         new("Note", Enums.GameSortBy.Rating),
-        new("Heures jouées", Enums.GameSortBy.Hours),
+        new("Heures jouées", Enums.GameSortBy.Hours)
     ];
 }

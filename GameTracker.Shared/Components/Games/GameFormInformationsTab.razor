@@ -1,6 +1,5 @@
 @using GameTracker.Shared.Features.Games.Dtos
 @using GameTracker.Shared.UI.Enums
-
 <MudStack Spacing="3">
 
     <MudStack Justify="Justify.Center"
@@ -51,7 +50,8 @@
             <MudTextField @bind-Value="Model.Title"
                           Variant="Variant.Outlined"
                           Margin="Margin.Dense"
-                          Required="true"/>
+                          Required="true"
+                          ReadOnly="@ReadOnly"/>
         </MudItem>
 
         <MudItem xs="12" md="3">
@@ -66,7 +66,7 @@
                      Class="align-center">
 
                 <MudItem xs="12" md="4">
-                    <MudRadioGroup @bind-Value="Model.CoverSource">
+                    <MudRadioGroup @bind-Value="Model.CoverSource" ReadOnly="@ReadOnly">
                         <MudStack Row="true"
                                   Spacing="2">
 
@@ -89,7 +89,8 @@
                         <MudTextField @bind-Value="Model.CoverUrl"
                                       Variant="Variant.Outlined"
                                       Margin="Margin.Dense"
-                                      Immediate="true"/>
+                                      Immediate="true"
+                                      ReadOnly="@ReadOnly"/>
                     }
                     else
                     {
@@ -98,7 +99,8 @@
                                          Margin="Margin.Dense"
                                          Min="0"
                                          Immediate="true"
-                                         HideSpinButtons="true"/>
+                                         HideSpinButtons="true"
+                                         ReadOnly="@ReadOnly"/>
                     }
 
                 </MudItem>
@@ -114,11 +116,11 @@
         </MudItem>
 
         <MudItem xs="12" md="9">
-            <MudTextField @bind-Value="Model.Description" Variant="Variant.Outlined" 
+            <MudTextField @bind-Value="Model.Description" Variant="Variant.Outlined"
                           Lines="2"
                           MaxLines="4"
                           Sizing="InputSizing.Auto"
-            />
+                          ReadOnly="@ReadOnly"/>
         </MudItem>
 
         <MudItem xs="12" md="3">
@@ -130,7 +132,8 @@
         <MudItem xs="12" md="9">
             <MudDatePicker @bind-Date="ReleaseDate"
                            Variant="Variant.Outlined"
-                           Margin="Margin.Dense"/>
+                           Margin="Margin.Dense"
+                           ReadOnly="@ReadOnly"/>
         </MudItem>
 
     </MudGrid>
@@ -138,7 +141,8 @@
 </MudStack>
 
 @code {
-    [Parameter, EditorRequired] public GameFormDto Model { get; set; } = null!;
+    [Parameter][EditorRequired] public GameFormDto Model { get; set; } = null!;
+    [Parameter] public bool ReadOnly { get; set; }
 
     private string? PreviewCoverUrl =>
         Model.CoverSource switch

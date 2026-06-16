@@ -1,10 +1,9 @@
 @using GameTracker.Shared.Features.Games.Dtos
-
 <MudGrid Spacing="3">
     @foreach (GameListItemDto game in Games)
     {
         <MudItem xs="12" sm="6" md="4" lg="3">
-            <GameCard Game="@game" />
+            <GameCard Game="@game"/>
         </MudItem>
     }
 </MudGrid>

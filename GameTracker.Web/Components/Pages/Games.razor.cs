@@ -4,6 +4,7 @@ using GameTracker.Shared.Domain.Enums;
 using GameTracker.Shared.Features.Games;
 using GameTracker.Shared.Features.Games.Dtos;
 using GameTracker.Shared.State;
+using GameTracker.Shared.UI.Enums;
 using Microsoft.AspNetCore.Components;
 using MudBlazor;
 
@@ -34,7 +35,8 @@ public partial class Games : AppComponentBase, IDisposable
         DialogParameters parameters = new()
         {
             [nameof(GameFormDialog.Title)] = "Ajouter un jeu",
-            [nameof(GameFormDialog.InitialLibraryStatus)] = GameLibraryStatus.Library
+            [nameof(GameFormDialog.InitialLibraryStatus)] = GameLibraryStatus.Library,
+            [nameof(GameFormDialog.Mode)] = DialogMode.Add
         };
 
         IDialogReference dialog =

@@ -1,6 +1,5 @@
 using GameTracker.Shared.Domain.Entities;
 using GameTracker.Shared.Features.Games.Dtos;
-using GameTracker.Shared.UI;
 using GameTracker.Shared.UI.Enums;
 
 namespace GameTracker.Shared.Features.Games;
@@ -68,7 +67,7 @@ public static class GameMapper
             // CLASSIFICATION
             PlatformId = dto.PlatformId!.Value,
             LauncherId = dto.LauncherId,
-            Modes = dto.Modes,
+            Modes = dto.Modes
         };
 
         game.GameGenres = dto.GenreIds
