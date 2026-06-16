@@ -10,6 +10,8 @@ public sealed class GameState(GameService gameService)
     private readonly GameService _gameService = gameService;
 
     public bool IsLoading { get; private set; }
+    
+    public bool IsLoaded { get; private set; }
 
     public List<GameListItemDto> Games { get; private set; } = [];
 
@@ -67,13 +69,14 @@ public sealed class GameState(GameService gameService)
         Games = await _gameService.GetLibraryAsync();
 
         IsLoading = false;
+        IsLoaded = true;
         NotifyStateChanged();
     }
 
     public async Task RefreshAsync()
     {
-        Games = await _gameService.GetLibraryAsync();
-        NotifyStateChanged();
+        IsLoaded = false;
+        await LoadAsync();
     }
 
     public void ApplyFilters(GameFilterModel filters)

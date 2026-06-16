@@ -21,7 +21,7 @@ public partial class Games : AppComponentBase, IDisposable
     {
         GameState.OnChange += StateHasChanged;
 
-        if (GameState.Games.Count == 0)
+        if (!GameState.IsLoaded)
             await GameState.LoadAsync();
     }
 

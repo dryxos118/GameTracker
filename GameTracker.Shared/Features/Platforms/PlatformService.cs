@@ -3,6 +3,7 @@ using GameTracker.Shared.Features.Common.Dtos;
 using GameTracker.Shared.Features.Common.Enums;
 using GameTracker.Shared.Features.Platforms.Dtos;
 using GameTracker.Shared.Infrastructure.Persistence;
+using GameTracker.Shared.State;
 using Microsoft.EntityFrameworkCore;
 
 namespace GameTracker.Shared.Features.Platforms;
@@ -127,7 +128,7 @@ public sealed class PlatformService(AppDbContext context)
                     return OperationResult.InUse;
 
                 int affectedRows = await _ctx.Platforms.Where(p => p.Id == id).ExecuteDeleteAsync();
-
+                
                 return affectedRows > 0 ? OperationResult.Success : OperationResult.NotFound;
             }
 
@@ -139,7 +140,7 @@ public sealed class PlatformService(AppDbContext context)
                     return OperationResult.InUse;
 
                 int affectedRows = await _ctx.Launchers.Where(l => l.Id == id).ExecuteDeleteAsync();
-
+                
                 return affectedRows > 0 ? OperationResult.Success : OperationResult.NotFound;
             }
             

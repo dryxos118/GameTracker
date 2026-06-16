@@ -148,6 +148,12 @@ a.mud-nav-link.active svg {
     fill: var(--mud-palette-text-primary)
 }
 
+.lookup-item:hover
+{
+    cursor: pointer;
+    background-color: var(--mud-palette-action-default-hover);
+}
+
 [class*="app-icon-"] {
     height: 30px;
     width: 35px;

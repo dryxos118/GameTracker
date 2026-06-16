@@ -1,4 +1,5 @@
 @page "/platforms"
+@using GameTracker.Shared.Components.Platforms
 @using GameTracker.Shared.Components.Shared
 @inherits AppComponentBase
 
@@ -6,43 +7,26 @@
 
 <MudStack Spacing="4">
     <PageHeader
-        Title="Plateformes"
-        SubTitle="Gérez vos plateformes, consoles et launchers."
+        Title="Plateformes & launchers"
+        SubTitle="Gérez les plateformes et les launchers de votre bibliothèque."
         Icon="@Icons.Material.Filled.Devices"
         Color="Color.Secondary" 
         IsLarge="true"/>
 
-    <MudGrid>
-        <MudItem xs="12" md="6">
-            <MudPaper Class="pa-4 h-100" Outlined="true">
-                <MudText Typo="Typo.h6">
-                    Plateformes
-                </MudText>
-
-                <MudList T="string" Dense="true">
-                    <MudListItem>PC</MudListItem>
-                    <MudListItem>Steam Deck</MudListItem>
-                    <MudListItem>PlayStation</MudListItem>
-                    <MudListItem>Xbox</MudListItem>
-                    <MudListItem>Switch</MudListItem>
-                </MudList>
-            </MudPaper>
-        </MudItem>
-
-        <MudItem xs="12" md="6">
-            <MudPaper Class="pa-4 h-100" Outlined="true">
-                <MudText Typo="Typo.h6">
-                    Launchers
-                </MudText>
-
-                <MudList T="string" Dense="true">
-                    <MudListItem>Steam</MudListItem>
-                    <MudListItem>Heroic</MudListItem>
-                    <MudListItem>Lutris</MudListItem>
-                    <MudListItem>Epic Games</MudListItem>
-                    <MudListItem>GOG</MudListItem>
-                </MudList>
-            </MudPaper>
-        </MudItem>
-    </MudGrid>
+    @if (PlatformState.IsLoading)
+    {
+        <MudProgressLinear Indeterminate="true" Color="Color.Primary"/>
+    }
+    else
+    {
+        <MudGrid Spacing="4">
+            <MudItem xs="12" lg="6">
+                <PlatformListCard Platforms="@PlatformState.Platforms" />
+            </MudItem>
+            
+            <MudItem xs="12" lg="6">
+                <LauncherListCard Launchers="@PlatformState.Launchers" />
+            </MudItem>
+        </MudGrid>
+    }
 </MudStack>
