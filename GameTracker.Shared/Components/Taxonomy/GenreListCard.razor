@@ -1,0 +1,182 @@
+@using GameTracker.Shared.Components.Shared
+@using GameTracker.Shared.Features.Common.Dtos
+@using GameTracker.Shared.Features.Common.Enums
+@using GameTracker.Shared.Features.Taxonomy
+@using GameTracker.Shared.Features.Taxonomy.Dtos
+@using GameTracker.Shared.State
+@using GameTracker.Shared.UI.Models
+@inherits AppComponentBase
+
+<MudPaper Class="pa-4" Outlined="true">
+    <MudStack Spacing="3">
+
+        <PageHeader Title="Genres" Icon="@Icons.Material.Filled.Apps">
+            <HeaderContent>
+                <MudIconButton Icon="@Icons.Material.Filled.Add"
+                               Color="Color.Primary" Variant="Variant.Filled"
+                               Size="Size.Small"
+                               OnClick="@AddGenre"/>
+            </HeaderContent>
+        </PageHeader>
+
+        <MudDivider/>
+
+        <MudStack Spacing="2">
+            @foreach (GenreListDto genre in Genres)
+            {
+                <MudPaper Class="pa-2 lookup-item" Outlined="true">
+                    <MudStack Row="true"
+                              AlignItems="AlignItems.Center"
+                              Justify="Justify.SpaceBetween">
+
+                        <MudStack Row="true"
+                                  AlignItems="AlignItems.Center"
+                                  Spacing="3">
+
+                            <MudText Typo="Typo.subtitle2">
+                                @genre.Name
+                            </MudText>
+
+                            <MudChip T="string"
+                                     Size="Size.Small"
+                                     Variant="Variant.Outlined"
+                                     Color="@(genre.TotalGames == MaxGames && MaxGames > 0
+                                                ? Color.Warning
+                                                : Color.Default)">
+
+                                @if (genre.TotalGames == MaxGames && MaxGames > 0)
+                                {
+                                    <MudIcon Icon="@Icons.Material.Filled.EmojiEvents"
+                                             Size="Size.Small"
+                                             Class="me-1"/>
+                                }
+
+                                @genre.TotalGames jeu@(genre.TotalGames > 1 ? "x" : "")
+                            </MudChip>
+
+                        </MudStack>
+
+                        <MudMenu Icon="@Icons.Material.Filled.MoreVert"
+                                 Size="Size.Small">
+                            <MudMenuItem Icon="@Icons.Material.Filled.Edit"
+                                         OnClick="@(async () => await UpdateGenre(genre))">
+                                Modifier
+                            </MudMenuItem>
+                            <MudMenuItem Icon="@Icons.Material.Filled.DeleteOutline"
+                                         IconColor="Color.Error"
+                                         OnClick="@(async () => await DeleteGenre(genre))">
+                                Supprimer
+                            </MudMenuItem>
+                        </MudMenu>
+                    </MudStack>
+                </MudPaper>
+            }
+        </MudStack>
+    </MudStack>
+</MudPaper>
+
+@code {
+    [Parameter][EditorRequired] public List<GenreListDto> Genres { get; set; } = [];
+
+    [Inject] public TaxonomyState TaxonomyState { get; set; } = null!;
+    [Inject] public IDialogService DialogService { get; set; } = null!;
+    [Inject] public ISnackbar Snackbar { get; set; } = null!;
+
+    private int MaxGames => Genres.Count > 0 ? Genres.Max(p => p.TotalGames) : 0;
+
+    private async Task AddGenre()
+    {
+        DialogParameters parameters = new()
+        {
+            [nameof(NameFormDialog.Title)] = "Ajouter un genre",
+            [nameof(NameFormDialog.Model)] = new NameFormDto(),
+            [nameof(NameFormDialog.ConfirmText)] = "Ajouter"
+        };
+
+        IDialogReference dialog = await DialogService.ShowAsync<NameFormDialog>(null, parameters,
+            new DialogOptions { CloseOnEscapeKey = false, BackdropClick = false });
+
+        DialogResult? result = await dialog.Result;
+
+        if (result is { Canceled: false, Data: NameFormDto dto })
+        {
+            bool success = await TaxonomyState.AddAsync(TaxonomyReferenceType.Genre, dto);
+
+            if (success)
+                Snackbar.Add($"Le genre '{dto.Name}' a été ajouté.", Severity.Success);
+            else
+                Snackbar.Add("Une erreur s'est produite. Veuillez réessayer.", Severity.Error);
+        }
+    }
+
+    private async Task UpdateGenre(GenreListDto genre)
+    {
+        DialogParameters parameters = new()
+        {
+            [nameof(NameFormDialog.Title)] = "Modifier un genre",
+            [nameof(NameFormDialog.Model)] = new NameFormDto { Id = genre.Id, Name = genre.Name },
+            [nameof(NameFormDialog.ConfirmText)] = "Enregistrer"
+        };
+
+        IDialogReference dialog = await DialogService.ShowAsync<NameFormDialog>(null, parameters,
+            new DialogOptions { CloseOnEscapeKey = false, BackdropClick = false });
+
+        DialogResult? result = await dialog.Result;
+
+        if (result is { Canceled: false, Data: NameFormDto dto })
+        {
+            bool success = await TaxonomyState.UpdateAsync(TaxonomyReferenceType.Genre, dto);
+
+            if (success)
+                Snackbar.Add($"Le genre '{dto.Name}' a été modifier.", Severity.Success);
+            else
+                Snackbar.Add("Une erreur s'est produite. Veuillez réessayer.", Severity.Error);
+        }
+    }
+
+    private async Task DeleteGenre(GenreListDto genre)
+    {
+        AppMessageDialogModel model = new()
+        {
+            Title = "Confirmation",
+            Message = $"Supprimer le genre \"{genre.Name}\" ?",
+            SubTitle = "Cette action est irréversible.",
+            ConfirmText = "Supprimer",
+            CancelText = "Annuler",
+            Icon = Icons.Material.Filled.Delete,
+            Color = Color.Error
+        };
+
+        DialogParameters parameters = new()
+        {
+            [nameof(AppMessageDialog.Model)] = model
+        };
+
+        IDialogReference dialog = await DialogService.ShowAsync<AppMessageDialog>(parameters);
+
+        DialogResult? result = await dialog.Result;
+
+        if (result is { Canceled: false })
+        {
+            OperationResult operationResult = await TaxonomyState.DeleteAsync(TaxonomyReferenceType.Genre, genre.Id);
+
+            switch (operationResult)
+            {
+                case OperationResult.Success:
+                    Snackbar.Add("Élément supprimé.", Severity.Success);
+                    break;
+                case OperationResult.InUse:
+                    Snackbar.Add("Impossible de supprimer cet élément car il est utilisé par un ou plusieurs jeux.",
+                        Severity.Warning);
+                    break;
+                case OperationResult.NotFound:
+                    Snackbar.Add("Element introuvable", Severity.Error);
+                    break;
+                default:
+                    Snackbar.Add("Une erreur s'est produite. Veuillez réessayer.", Severity.Error);
+                    break;
+            }
+        }
+    }
+
+}

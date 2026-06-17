@@ -22,5 +22,6 @@ public static class ServiceCollectionExtensions
         services.AddScoped<DashboardState>();
         services.AddScoped<GameState>();
         services.AddScoped<PlatformState>();
+        services.AddScoped<TaxonomyState>();
     }
 }

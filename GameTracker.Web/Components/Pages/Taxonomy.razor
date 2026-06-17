@@ -1,5 +1,6 @@
 @page "/taxonomy"
 @using GameTracker.Shared.Components.Shared
+@using GameTracker.Shared.Components.Taxonomy
 @inherits AppComponentBase
 
 <PageTitle>Genres & Tags</PageTitle>
@@ -9,40 +10,23 @@
         Title="Genres & tags"
         SubTitle="Organisez vos jeux avec des genres et des tags personnalisés."
         Icon="@Icons.Material.Filled.Category"
-        Color="Color.Secondary" 
+        Color="Color.Secondary"
         IsLarge="true"/>
 
-    <MudGrid>
-        <MudItem xs="12" md="6">
-            <MudPaper Class="pa-4 h-100" Outlined="true">
-                <MudText Typo="Typo.h6">
-                    Genres
-                </MudText>
+    @if (TaxonomyState.IsLoading)
+    {
+        <MudProgressLinear Indeterminate="true" Color="Color.Primary"/>
+    }
+    else
+    {
+        <MudGrid>
+            <MudItem xs="12" md="6">
+                <GenreListCard Genres="@TaxonomyState.Genres"/>
+            </MudItem>
 
-                <MudList T="string" Dense="true">
-                    <MudListItem>RPG</MudListItem>
-                    <MudListItem>FPS</MudListItem>
-                    <MudListItem>Simulation</MudListItem>
-                    <MudListItem>Sandbox</MudListItem>
-                    <MudListItem>Adventure</MudListItem>
-                </MudList>
-            </MudPaper>
-        </MudItem>
-
-        <MudItem xs="12" md="6">
-            <MudPaper Class="pa-4 h-100" Outlined="true">
-                <MudText Typo="Typo.h6">
-                    Tags
-                </MudText>
-
-                <MudList T="string" Dense="true">
-                    <MudListItem>Open World</MudListItem>
-                    <MudListItem>Fantasy</MudListItem>
-                    <MudListItem>Coop</MudListItem>
-                    <MudListItem>Sci-Fi</MudListItem>
-                    <MudListItem>Linux Friendly</MudListItem>
-                </MudList>
-            </MudPaper>
-        </MudItem>
-    </MudGrid>
+            <MudItem xs="12" md="6">
+                <TagListCard Tags="@TaxonomyState.Tags"/>
+            </MudItem>
+        </MudGrid>
+    }
 </MudStack>
