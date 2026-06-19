@@ -15,7 +15,6 @@
 @code {
     [Parameter] public bool Open { get; set; }
     [Parameter] public EventCallback<bool> OpenChanged { get; set; }
-
     [Parameter] public DrawerVariant Variant { get; set; } = DrawerVariant.Responsive;
     [Parameter] public DrawerClipMode ClipMode { get; set; } = DrawerClipMode.Always;
     [Parameter] public Anchor Anchor { get; set; } = Anchor.Left;

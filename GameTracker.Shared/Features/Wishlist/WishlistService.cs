@@ -36,8 +36,7 @@ public sealed class WishlistService(AppDbContext context)
 
         game.LibraryStatus = GameLibraryStatus.Library;
 
-        await _ctx.SaveChangesAsync();
-
-        return OperationResult.Success;
+        int affectedRows = await _ctx.SaveChangesAsync();
+        return affectedRows > 0 ? OperationResult.Success : OperationResult.Error;
     }
 }

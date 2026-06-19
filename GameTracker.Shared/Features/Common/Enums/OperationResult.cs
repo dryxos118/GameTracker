@@ -4,5 +4,6 @@ public enum OperationResult
 {
     Success = 1,
     NotFound = 2,
-    InUse = 3
+    InUse = 3,
+    Error = 4,
 }

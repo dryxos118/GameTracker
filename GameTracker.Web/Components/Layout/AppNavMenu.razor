@@ -1,7 +1,6 @@
 @using GameTracker.Web.App.Models
 
 <MudNavMenu Rounded="true" Margin="Margin.Dense" Class="@(IsMini ? "mt-4" : "mt-4 px-2")">
-
     @foreach (NavigationItem item in NavItems)
     {
         @if (IsMini)
@@ -29,13 +28,9 @@
             </MudNavLink>
         }
     }
-
 </MudNavMenu>
 
 @code {
-    [Parameter]
-    public IEnumerable<NavigationItem> NavItems { get; set; } = [];
-
-    [Parameter]
-    public bool IsMini { get; set; }
+    [Parameter] [EditorRequired] public IEnumerable<NavigationItem> NavItems { get; set; } = [];
+    [Parameter] public bool IsMini { get; set; }
 }

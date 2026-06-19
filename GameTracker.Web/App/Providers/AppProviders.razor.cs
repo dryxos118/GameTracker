@@ -10,7 +10,7 @@ namespace GameTracker.Web.App.Providers;
 public partial class AppProviders : ComponentBase, IDisposable
 {
     [Parameter] public RenderFragment? ChildContent { get; set; }
-    
+
     [Inject] private ThemeState ThemeState { get; set; } = null!;
     [Inject] private ThemePersistenceService ThemePersistence { get; set; } = null!;
 
@@ -23,6 +23,11 @@ public partial class AppProviders : ComponentBase, IDisposable
         BuildTheme();
 
         ThemeState.OnChange += OnThemeChange;
+    }
+
+    public void Dispose()
+    {
+        ThemeState.OnChange -= OnThemeChange;
     }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -83,10 +88,5 @@ public partial class AppProviders : ComponentBase, IDisposable
     {
         _currentPrimaryColor = ThemeState.PrimaryColor;
         _theme = ThemeConfiguration.Create(_currentPrimaryColor);
-    }
-
-    public void Dispose()
-    {
-        ThemeState.OnChange -= OnThemeChange;
     }
 }

@@ -1,11 +1,14 @@
-@using GameTracker.Shared.Components.Shared
 @using GameTracker.Shared.Components.Shared.Dialogs
 @using GameTracker.Shared.Components.Shared.Dialogs.GameForm
 @using GameTracker.Shared.Domain.Enums
+@using GameTracker.Shared.Features.Common.Enums
 @using GameTracker.Shared.Features.Games
 @using GameTracker.Shared.Features.Games.Dtos
+@using GameTracker.Shared.State
 @using GameTracker.Shared.UI.Enums
+@using GameTracker.Shared.UI.Helpers
 @using GameTracker.Shared.UI.Models
+
 <MudCard Outlined="true" Class="game-card">
 
     <div class="game-card-cover">
@@ -115,18 +118,15 @@
 
                     </MudText>
                 }
-
             </MudStack>
-
         </MudStack>
-
     </MudCardContent>
-
 </MudCard>
 
 @code {
-    [Parameter][EditorRequired] public GameListItemDto Game { get; set; } = null!;
-    [Inject] private GameService GameService { get; set; } = null!;
+    [Parameter] [EditorRequired] public GameListItemDto Game { get; set; } = null!;
+
+    [Inject] private GameState GameState { get; set; } = null!;
     [Inject] private IDialogService DialogService { get; set; } = null!;
     [Inject] private ISnackbar Snackbar { get; set; } = null!;
 
@@ -155,7 +155,7 @@
         IDialogReference dialog = await DialogService.ShowAsync<GameFormDialog>(null, parameters,
             new DialogOptions { BackdropClick = false, CloseOnEscapeKey = false });
 
-        DialogResult? result = await dialog.Result;
+        await dialog.Result;
     }
 
     private async Task UpdateGame()
@@ -173,22 +173,17 @@
 
         DialogResult? result = await dialog.Result;
 
-        if (result is null || result.Canceled)
-            return;
-
-        if (result.Data is not GameFormDto dto)
+        if (result is { Canceled: false, Data: GameFormDto dto })
         {
-            Snackbar.Add(
-                "Impossible de récupérer les données du jeu.",
-                Severity.Error);
-            return;
+            OperationResult success = await GameState.AddAsync(dto);
+
+            if (success == OperationResult.Success)
+                Snackbar.Add($"{dto.Title} à été modifier.", Severity.Success);
+            else if (success == OperationResult.NotFound)
+                Snackbar.Add(message: MessageHelper.NotFoundError, Severity.Error);
+            else
+                Snackbar.Add(MessageHelper.GenericError, Severity.Error);
         }
-
-        await GameService.UpdateAsync(dto);
-
-        Snackbar.Add(
-            $"Le jeu '{dto.Title}' a été Modifier.",
-            Severity.Success);
     }
 
     private async Task DeleteGame()
@@ -213,15 +208,17 @@
 
         DialogResult? result = await dialog.Result;
 
-        if (result is null || result.Canceled)
-            return;
+        if (result is { Canceled: false })
+        {
+            OperationResult success = await GameState.DeleteAsync(Game.Id);
 
-        bool deleted = await GameService.DeleteAsync(Game.Id);
-
-        if (deleted)
-            Snackbar.Add(
-                $"Le jeu '{Game.Title}' a été supprimé.",
-                Severity.Success);
+            if (success == OperationResult.Success)
+                Snackbar.Add($"{Game.Title} à été supprimé.", Severity.Success);
+            else if (success == OperationResult.NotFound)
+                Snackbar.Add(message: MessageHelper.NotFoundError, Severity.Error);
+            else
+                Snackbar.Add(MessageHelper.GenericError, Severity.Error);
+        }
     }
 
 }

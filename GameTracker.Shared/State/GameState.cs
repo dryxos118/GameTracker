@@ -1,3 +1,4 @@
+using GameTracker.Shared.Features.Common.Enums;
 using GameTracker.Shared.Features.Games;
 using GameTracker.Shared.Features.Games.Dtos;
 using GameTracker.Shared.UI.Enums;
@@ -10,7 +11,7 @@ public sealed class GameState(GameService gameService)
     private readonly GameService _gameService = gameService;
 
     public bool IsLoading { get; private set; }
-    
+
     public bool IsLoaded { get; private set; }
 
     public List<GameListItemDto> Games { get; private set; } = [];
@@ -64,6 +65,7 @@ public sealed class GameState(GameService gameService)
     public async Task LoadAsync()
     {
         IsLoading = true;
+        IsLoaded = false;
         NotifyStateChanged();
 
         Games = await _gameService.GetLibraryAsync();
@@ -73,12 +75,36 @@ public sealed class GameState(GameService gameService)
         NotifyStateChanged();
     }
 
-    public async Task RefreshAsync()
+    public async Task<OperationResult> AddAsync(GameFormDto dto)
     {
-        IsLoaded = false;
-        await LoadAsync();
+        OperationResult result = await _gameService.AddAsync(dto);
+
+        if (result == OperationResult.Success)
+            await LoadAsync();
+
+        return result;
     }
 
+    public async Task<OperationResult> UpdateAsync(GameFormDto dto)
+    {
+        OperationResult result = await _gameService.UpdateAsync(dto);
+
+        if (result == OperationResult.Success)
+            await LoadAsync();
+
+        return result;
+    }
+
+    public async Task<OperationResult> DeleteAsync(int id)
+    {
+        OperationResult result = await _gameService.DeleteAsync(id);
+
+        if (result == OperationResult.Success)
+            await LoadAsync();
+
+        return result;
+    }
+    
     public void ApplyFilters(GameFilterModel filters)
     {
         Filters = filters;

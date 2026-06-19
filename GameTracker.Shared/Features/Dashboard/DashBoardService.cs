@@ -55,8 +55,7 @@ public sealed class DashBoardService(AppDbContext context)
                 game.Id,
                 game.Title,
                 game.CoverUrl,
-                game.Platform.Name,
-                game.Rating
+                game.Platform.Name
             ))
             .ToListAsync();
     }

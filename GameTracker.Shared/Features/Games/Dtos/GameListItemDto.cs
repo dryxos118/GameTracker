@@ -2,7 +2,7 @@ using GameTracker.Shared.Domain.Enums;
 
 namespace GameTracker.Shared.Features.Games.Dtos;
 
-public class GameListItemDto
+public sealed class GameListItemDto
 {
     public int Id { get; set; }
 

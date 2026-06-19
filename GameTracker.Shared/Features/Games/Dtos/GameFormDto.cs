@@ -10,16 +10,12 @@ public sealed class GameFormDto
     // INFO
     public string Title { get; set; } = string.Empty;
     public string? Description { get; set; }
-
     public string? CoverUrl { get; set; }
+    public DateOnly? ReleaseDate { get; set; }
 
     // UI
     public GameCoverSource CoverSource { get; set; } = GameCoverSource.Url;
-
     public int? SteamAppId { get; set; }
-
-    //
-    public DateOnly? ReleaseDate { get; set; }
 
     // Library
     public GameLibraryStatus LibraryStatus { get; set; } = GameLibraryStatus.Library;

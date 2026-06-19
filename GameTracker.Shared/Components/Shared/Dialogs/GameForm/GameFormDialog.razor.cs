@@ -15,7 +15,7 @@ public partial class GameFormDialog : AppComponentBase
 {
     [CascadingParameter] private IMudDialogInstance MudDialog { get; set; } = null!;
 
-    [Parameter] [EditorRequired] public string Title { get; set; }
+    [Parameter] [EditorRequired] public string Title { get; set; } = string.Empty;
     [Parameter] public GameLibraryStatus InitialLibraryStatus { get; set; } = GameLibraryStatus.Library;
     [Parameter] public int? GameId { get; set; }
     [Parameter] public DialogMode Mode { get; set; } = DialogMode.Add;

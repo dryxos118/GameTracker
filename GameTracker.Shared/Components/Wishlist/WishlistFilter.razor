@@ -32,13 +32,17 @@
 </MudPaper>
 
 @code {
-
     [Inject] private WishlistState WishlistState { get; set; } = null!;
     [Inject] private IDialogService DialogService { get; set; } = null!;
 
     protected override void OnInitialized()
     {
         WishlistState.OnChange += StateHasChanged;
+    }
+    
+    public void Dispose()
+    {
+        WishlistState.OnChange -= StateHasChanged;
     }
 
     private void OnSearchChanged(string? search)
@@ -64,8 +68,4 @@
         WishlistState.ApplyFilters(model);
     }
 
-    public void Dispose()
-    {
-        WishlistState.OnChange -= StateHasChanged;
-    }
 }

@@ -1,6 +1,6 @@
-@inherits AppComponentBase
 @using GameTracker.Shared.State
 @using GameTracker.Shared.UI.Models
+@inherits AppComponentBase
 @implements IDisposable
 
 <MudPaper Outlined="true" Class="pa-4">
@@ -40,15 +40,15 @@
         GameState.OnChange += StateHasChanged;
     }
 
+    public void Dispose()
+    {
+        GameState.OnChange -= StateHasChanged;
+    }
+
     private void OnSearchChanged(string? value)
     {
         GameState.Filters.Search = value ?? string.Empty;
         GameState.NotifyStateChanged();
-    }
-
-    public void Dispose()
-    {
-        GameState.OnChange -= StateHasChanged;
     }
 
     private async Task OpenFilters()

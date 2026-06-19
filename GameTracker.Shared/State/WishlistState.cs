@@ -6,10 +6,9 @@ using GameTracker.Shared.UI.Models;
 
 namespace GameTracker.Shared.State;
 
-public sealed class WishlistState(WishlistService wishlistService, GameState gameState)
+public sealed class WishlistState(WishlistService wishlistService)
 {
     private readonly WishlistService _wishlistService = wishlistService;
-    private readonly GameState _gameState = gameState;
 
     public bool IsLoading { get; private set; }
 

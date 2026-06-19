@@ -1,4 +1,3 @@
-@using GameTracker.Shared.Components.Shared
 @using GameTracker.Shared.Components.Shared.Dialogs
 @using GameTracker.Shared.Domain.Enums
 @using GameTracker.Shared.Features.Common.Dtos
@@ -40,7 +39,7 @@
         </MudItem>
 
         <MudItem xs="12" md="8">
-            <MudSelect T="string?" @bind-Value="Model.LauncherName"
+            <MudSelect T="string" @bind-Value="Model.LauncherName"
                        Variant="Variant.Outlined" Margin="Margin.Dense">
                 @foreach (SelectItemDto<int> launcher in Launchers)
                 {
@@ -99,15 +98,13 @@
                                  ToggledIcon="@Icons.Material.Filled.Favorite"
                                  Color="Color.Error"/>
         </MudItem>
-
     </MudGrid>
-
 </AppDialogShell>
 
 @code {
     [CascadingParameter] private IMudDialogInstance MudDialog { get; set; } = null!;
 
-    [Parameter][EditorRequired] public GameFilterModel Model { get; set; } = new();
+    [Parameter] [EditorRequired] public GameFilterModel Model { get; set; } = new();
 
     [Inject] private GameState GameState { get; set; } = null!;
     [Inject] private PlatformService PlatformService { get; set; } = null!;

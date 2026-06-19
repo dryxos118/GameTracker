@@ -13,8 +13,7 @@ public sealed class TaxonomyService(AppDbContext context)
 
     public async Task<List<SelectItemDto<int>>> GetGenreSelectItemsAsync()
     {
-        return await _ctx.Genres
-            .AsNoTracking()
+        return await _ctx.Genres.AsNoTracking()
             .OrderBy(g => g.Name)
             .Select(g => new SelectItemDto<int>(g.Name, g.Id))
             .ToListAsync();
@@ -22,8 +21,7 @@ public sealed class TaxonomyService(AppDbContext context)
 
     public async Task<List<SelectItemDto<int>>> GetTagSelectItemsAsync()
     {
-        return await _ctx.Tags
-            .AsNoTracking()
+        return await _ctx.Tags.AsNoTracking()
             .OrderBy(t => t.Name)
             .Select(t => new SelectItemDto<int>(t.Name, t.Id))
             .ToListAsync();
@@ -31,8 +29,7 @@ public sealed class TaxonomyService(AppDbContext context)
 
     public async Task<List<GenreListDto>> GetGenresAsync()
     {
-        return await _ctx.Genres
-            .AsNoTracking()
+        return await _ctx.Genres.AsNoTracking()
             .OrderBy(g => g.Name)
             .Select(g => new GenreListDto(g.Id, g.Name, g.GameGenres.Count
             ))
@@ -41,19 +38,21 @@ public sealed class TaxonomyService(AppDbContext context)
 
     public async Task<List<TagListDto>> GetTagsAsync()
     {
-        return await _ctx.Tags
-            .AsNoTracking()
+        return await _ctx.Tags.AsNoTracking()
             .OrderBy(t => t.Name)
             .Select(t => new TagListDto(t.Id, t.Name, t.GameTags.Count))
             .ToListAsync();
     }
 
-    public async Task<bool> AddAsync(TaxonomyReferenceType type, NameFormDto dto)
+    public async Task<OperationResult> AddAsync(TaxonomyReferenceType type, NameFormDto dto)
     {
         if (string.IsNullOrWhiteSpace(dto.Name))
-            return false;
+            return OperationResult.Error;
 
         string name = dto.Name.Trim();
+
+        if (dto.Name.Equals(name, StringComparison.InvariantCultureIgnoreCase))
+            return OperationResult.Success;
 
         switch (type)
         {
@@ -66,17 +65,17 @@ public sealed class TaxonomyService(AppDbContext context)
                 break;
 
             default:
-                return false;
+                return OperationResult.Error;
         }
 
-        await _ctx.SaveChangesAsync();
-        return true;
+        int affectedRows = await _ctx.SaveChangesAsync();
+        return affectedRows > 0 ? OperationResult.Success : OperationResult.Error;
     }
 
-    public async Task<bool> UpdateAsync(TaxonomyReferenceType type, NameFormDto dto)
+    public async Task<OperationResult> UpdateAsync(TaxonomyReferenceType type, NameFormDto dto)
     {
         if (dto.Id is null || string.IsNullOrWhiteSpace(dto.Name))
-            return false;
+            return OperationResult.Error;
 
         string name = dto.Name.Trim();
 
@@ -86,7 +85,7 @@ public sealed class TaxonomyService(AppDbContext context)
                 Genre? genre = await _ctx.Genres.FindAsync(dto.Id.Value);
 
                 if (genre is null)
-                    return false;
+                    return OperationResult.NotFound;
 
                 genre.Name = name;
                 break;
@@ -95,17 +94,17 @@ public sealed class TaxonomyService(AppDbContext context)
                 Tag? tag = await _ctx.Tags.FindAsync(dto.Id.Value);
 
                 if (tag is null)
-                    return false;
+                    return OperationResult.NotFound;
 
                 tag.Name = name;
                 break;
 
             default:
-                return false;
+                return OperationResult.Error;
         }
 
-        await _ctx.SaveChangesAsync();
-        return true;
+        int affectedRows = await _ctx.SaveChangesAsync();
+        return affectedRows > 0 ? OperationResult.Success : OperationResult.Error;
     }
 
     public async Task<OperationResult> DeleteAsync(TaxonomyReferenceType type, int id)
@@ -137,7 +136,7 @@ public sealed class TaxonomyService(AppDbContext context)
             }
 
             default:
-                return OperationResult.NotFound;
+                return OperationResult.Error;
         }
     }
 }

@@ -13,18 +13,30 @@ public static class ServiceCollectionExtensions
 {
     public static void AddGameTrackerSharedServices(this IServiceCollection services)
     {
+        // Dashboard
         services.AddScoped<DashBoardService>();
+        services.AddScoped<DashboardState>();
+
+        // Games
         services.AddScoped<GameService>();
-        services.AddScoped<PlatformService>();
-        services.AddScoped<TaxonomyService>();
+        services.AddScoped<GameState>();
+
+        // Wishlist
         services.AddScoped<WishlistService>();
+        services.AddScoped<WishlistState>();
+
+        // Platforms
+        services.AddScoped<PlatformService>();
+        services.AddScoped<PlatformState>();
+
+        // Taxonomies
+        services.AddScoped<TaxonomyService>();
+        services.AddScoped<TaxonomyState>();
+
+        // Settings
         services.AddScoped<SettingsService>();
 
+        // Database
         services.AddScoped<DatabaseState>();
-        services.AddScoped<DashboardState>();
-        services.AddScoped<GameState>();
-        services.AddScoped<PlatformState>();
-        services.AddScoped<TaxonomyState>();
-        services.AddScoped<WishlistState>();
     }
 }

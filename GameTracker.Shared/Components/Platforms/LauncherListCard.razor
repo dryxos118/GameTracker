@@ -5,6 +5,7 @@
 @using GameTracker.Shared.Features.Platforms
 @using GameTracker.Shared.Features.Platforms.Dtos
 @using GameTracker.Shared.State
+@using GameTracker.Shared.UI.Helpers
 @using GameTracker.Shared.UI.Models
 @inherits AppComponentBase
 
@@ -44,14 +45,12 @@
                                      Color="@(launcher.TotalGames == MaxGames && MaxGames > 0
                                                 ? Color.Warning
                                                 : Color.Default)">
-
                                 @if (launcher.TotalGames == MaxGames && MaxGames > 0)
                                 {
                                     <MudIcon Icon="@Icons.Material.Filled.EmojiEvents"
                                              Size="Size.Small"
                                              Class="me-1"/>
                                 }
-
                                 @launcher.TotalGames jeu@(launcher.TotalGames > 1 ? "x" : "")
                             </MudChip>
 
@@ -60,7 +59,7 @@
                         <MudMenu Icon="@Icons.Material.Filled.MoreVert"
                                  Size="Size.Small">
                             <MudMenuItem Icon="@Icons.Material.Filled.Edit"
-                                         OnClick="@(async() => await UpdateLauncher(launcher))">
+                                         OnClick="@(async () => await UpdateLauncher(launcher))">
                                 Modifier
                             </MudMenuItem>
                             <MudMenuItem Icon="@Icons.Material.Filled.DeleteOutline"
@@ -77,9 +76,8 @@
 </MudPaper>
 
 @code {
-    [Parameter, EditorRequired] public List<LauncherListDto> Launchers { get; set; } = [];
-
-    [Inject] private PlatformService PlatformService { get; set; } = null!;
+    [Parameter] [EditorRequired] public List<LauncherListDto> Launchers { get; set; } = [];
+    
     [Inject] private PlatformState PlatformState { get; set; } = null!;
     [Inject] private IDialogService DialogService { get; set; } = null!;
     [Inject] private ISnackbar Snackbar { get; set; } = null!;
@@ -102,9 +100,12 @@
 
         if (result is { Canceled: false, Data: NameFormDto dto })
         {
-            await PlatformService.AddAsync(PlatformReferenceType.Launcher, dto);
-            Snackbar.Add($"Le launcher '{dto.Name}' a été ajouté.", Severity.Success);
-            await PlatformState.ReloadAsync();
+            OperationResult success = await PlatformState.AddAsync(PlatformReferenceType.Launcher, dto);
+
+            if (success == OperationResult.Success)
+                Snackbar.Add($"{dto.Name} à été ajouté.", Severity.Success);
+            else
+                Snackbar.Add(MessageHelper.GenericError, Severity.Error);
         }
     }
 
@@ -124,8 +125,14 @@
 
         if (result is { Canceled: false, Data: NameFormDto dto })
         {
-            await PlatformService.UpdateAsync(PlatformReferenceType.Platform, dto);
-            await PlatformState.ReloadAsync();
+            OperationResult success = await PlatformState.UpdateAsync(PlatformReferenceType.Launcher, dto);
+
+            if (success == OperationResult.Success)
+                Snackbar.Add($"{dto.Name} à été modifier.", Severity.Success);
+            else if (success == OperationResult.NotFound)
+                Snackbar.Add(message: MessageHelper.NotFoundError, Severity.Error);
+            else
+                Snackbar.Add(MessageHelper.GenericError, Severity.Error);
         }
     }
 
@@ -153,22 +160,26 @@
 
         if (result is { Canceled: false })
         {
-            OperationResult operationResult = await PlatformService.DeleteAsync(PlatformReferenceType.Launcher, launcher.Id);
+            OperationResult success = await PlatformState.DeleteAsync(PlatformReferenceType.Launcher, launcher.Id);
 
-            switch (operationResult)
+            switch (success)
             {
                 case OperationResult.Success:
-                    Snackbar.Add("Élément supprimé.", Severity.Success);
-                    await PlatformState.ReloadAsync();
+                    Snackbar.Add($"{launcher.Name} à été supprimé.", Severity.Success);
                     break;
                 case OperationResult.InUse:
-                    Snackbar.Add("Impossible de supprimer cet élément car il est utilisé par un ou plusieurs jeux.",
+                    Snackbar.Add($"Impossible de supprimer {launcher.Name} car il est utilisé par un ou plusieurs jeux.",
                         Severity.Warning);
                     break;
                 case OperationResult.NotFound:
-                    Snackbar.Add("Element introuvable", Severity.Error);
+                    Snackbar.Add(MessageHelper.NotFoundError, Severity.Error);
+                    break;
+                case OperationResult.Error:
+                default:
+                    Snackbar.Add(MessageHelper.GenericError, Severity.Error);
                     break;
             }
         }
     }
+
 }

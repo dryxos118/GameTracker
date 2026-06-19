@@ -22,9 +22,20 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
     public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = new())
     {
         foreach (EntityEntry<Game> gameEntry in ChangeTracker.Entries<Game>())
-            if (gameEntry.State == EntityState.Added)
-                gameEntry.Entity.AddedAt = DateTime.UtcNow;
-            else if (gameEntry.State == EntityState.Modified) gameEntry.Entity.UpdatedAt = DateTime.UtcNow;
+            switch (gameEntry.State)
+            {
+                case EntityState.Added:
+                    gameEntry.Entity.AddedAt = DateTime.UtcNow;
+                    break;
+                case EntityState.Modified:
+                    gameEntry.Entity.UpdatedAt = DateTime.UtcNow;
+                    break;
+                case EntityState.Detached:
+                case EntityState.Unchanged:
+                case EntityState.Deleted:
+                default:
+                    break;
+            }
 
         return base.SaveChangesAsync(cancellationToken);
     }

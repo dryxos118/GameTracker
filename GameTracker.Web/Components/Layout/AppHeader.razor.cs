@@ -9,7 +9,6 @@ public partial class AppHeader : AppComponentBase, IDisposable
 {
     [Parameter] public bool IsDarkMode { get; set; }
     [Parameter] public int Elevation { get; set; } = 1;
-
     [Parameter] public EventCallback OnDrawerToggle { get; set; }
     [Parameter] public EventCallback OnThemeToggle { get; set; }
 
@@ -24,6 +23,11 @@ public partial class AppHeader : AppComponentBase, IDisposable
 
         await LoadTotalGamesAsync();
     }
+    
+    public void Dispose()
+    {
+        DatabaseState.OnChange -= OnDatabaseChanged;
+    }
 
     private void OnDatabaseChanged()
     {
@@ -37,10 +41,5 @@ public partial class AppHeader : AppComponentBase, IDisposable
     private async Task LoadTotalGamesAsync()
     {
         _totalGames = await DashBoardService.GetTotalGamesAsync();
-    }
-
-    public void Dispose()
-    {
-        DatabaseState.OnChange -= OnDatabaseChanged;
     }
 }

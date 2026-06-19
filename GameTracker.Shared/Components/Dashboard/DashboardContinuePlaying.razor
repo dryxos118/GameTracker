@@ -1,5 +1,6 @@
 @using GameTracker.Shared.Components.Shared
 @using GameTracker.Shared.Features.Dashboard.Dtos
+
 <MudPaper Class="pa-4" Outlined="true">
     <MudStack Spacing="3">
         <PageHeader Title="Continuer à jouer" SubTitle="Continue tes jeux en cours"
@@ -20,5 +21,5 @@
 </MudPaper>
 
 @code {
-    [Parameter][EditorRequired] public List<ContinuePlayingGameDto> Dtos { get; set; } = null!;
+    [Parameter] [EditorRequired] public List<ContinuePlayingGameDto> Dtos { get; set; } = null!;
 }

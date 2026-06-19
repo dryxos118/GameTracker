@@ -33,26 +33,24 @@ public sealed class TaxonomyState(TaxonomyService taxonomyService)
         NotifyStateChanged();
     }
 
-    public async Task<bool> AddAsync(TaxonomyReferenceType type, NameFormDto dto)
+    public async Task<OperationResult> AddAsync(TaxonomyReferenceType type, NameFormDto dto)
     {
-        bool success = await _taxonomyService.AddAsync(type, dto);
+        OperationResult result = await _taxonomyService.AddAsync(type, dto);
 
-        if (!success)
-            return false;
+        if (result == OperationResult.Success)
+            await LoadAsync();
 
-        await LoadAsync();
-        return true;
+        return result;
     }
 
-    public async Task<bool> UpdateAsync(TaxonomyReferenceType type, NameFormDto dto)
+    public async Task<OperationResult> UpdateAsync(TaxonomyReferenceType type, NameFormDto dto)
     {
-        bool success = await _taxonomyService.UpdateAsync(type, dto);
+        OperationResult result = await _taxonomyService.UpdateAsync(type, dto);
 
-        if (!success)
-            return false;
+        if (result == OperationResult.Success)
+            await LoadAsync();
 
-        await LoadAsync();
-        return true;
+        return result;
     }
 
     public async Task<OperationResult> DeleteAsync(TaxonomyReferenceType type, int id)

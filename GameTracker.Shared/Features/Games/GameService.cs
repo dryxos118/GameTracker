@@ -1,5 +1,6 @@
 using GameTracker.Shared.Domain.Entities;
 using GameTracker.Shared.Domain.Enums;
+using GameTracker.Shared.Features.Common.Enums;
 using GameTracker.Shared.Features.Games.Dtos;
 using GameTracker.Shared.Infrastructure.Persistence;
 using GameTracker.Shared.State;
@@ -47,24 +48,24 @@ public sealed class GameService(AppDbContext context, DashboardState dashboardSt
             : game.ToDto();
     }
 
-    public async Task<int> AddAsync(GameFormDto dto)
+    public async Task<OperationResult> AddAsync(GameFormDto dto)
     {
         Game game = dto.ToEntity();
 
         _ctx.Games.Add(game);
 
-        await _ctx.SaveChangesAsync();
+        int affectedRows = await _ctx.SaveChangesAsync();
 
         _dashboardState.NotifyStateChanged();
         _databaseState.NotifyDatabaseChanged();
 
-        return game.Id;
+        return affectedRows > 0 ? OperationResult.Success : OperationResult.Error;
     }
 
-    public async Task<bool> UpdateAsync(GameFormDto dto)
+    public async Task<OperationResult> UpdateAsync(GameFormDto dto)
     {
         if (dto.Id is null)
-            return false;
+            return OperationResult.Error;
 
         Game? game = await _ctx.Games
             .Include(g => g.GameGenres)
@@ -72,9 +73,11 @@ public sealed class GameService(AppDbContext context, DashboardState dashboardSt
             .FirstOrDefaultAsync(g => g.Id == dto.Id.Value);
 
         if (game is null)
-            return false;
+            return OperationResult.NotFound;
 
         Game updatedGame = dto.ToEntity();
+        
+        Console.WriteLine(updatedGame.Id);
 
         _ctx.Entry(game).CurrentValues.SetValues(updatedGame);
 
@@ -84,21 +87,21 @@ public sealed class GameService(AppDbContext context, DashboardState dashboardSt
         game.GameGenres.AddRange(updatedGame.GameGenres);
         game.GameTags.AddRange(updatedGame.GameTags);
 
-        await _ctx.SaveChangesAsync();
+        int affectedRows = await _ctx.SaveChangesAsync();
 
         _dashboardState.NotifyStateChanged();
         _databaseState.NotifyDatabaseChanged();
 
-        return true;
+        return affectedRows > 0 ? OperationResult.Success : OperationResult.Error;
     }
 
-    public async Task<bool> DeleteAsync(int gameId)
+    public async Task<OperationResult> DeleteAsync(int gameId)
     {
         int affectedRows = await _ctx.Games.Where(g => g.Id == gameId).ExecuteDeleteAsync();
 
         _dashboardState.NotifyStateChanged();
         _databaseState.NotifyDatabaseChanged();
-
-        return affectedRows > 0;
+        
+        return affectedRows > 0 ? OperationResult.Success : OperationResult.Error;
     }
 }

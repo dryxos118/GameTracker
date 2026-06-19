@@ -109,11 +109,10 @@
             }
         </MudSelect>
     </MudItem>
-
 </MudGrid>
 
 @code {
-    [Parameter][EditorRequired] public GameFormDto Model { get; set; } = null!;
+    [Parameter] [EditorRequired] public GameFormDto Model { get; set; } = null!;
     [Parameter] public bool ReadOnly { get; set; }
     [Parameter] public List<SelectItemDto<int>> Platforms { get; set; } = [];
     [Parameter] public List<SelectItemDto<int>> Launchers { get; set; } = [];

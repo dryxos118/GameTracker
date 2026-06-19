@@ -1,11 +1,12 @@
 using GameTracker.Shared.Components.Bases;
-using GameTracker.Shared.Components.Games;
 using GameTracker.Shared.Components.Shared.Dialogs.GameForm;
 using GameTracker.Shared.Domain.Enums;
+using GameTracker.Shared.Features.Common.Enums;
 using GameTracker.Shared.Features.Games;
 using GameTracker.Shared.Features.Games.Dtos;
 using GameTracker.Shared.State;
 using GameTracker.Shared.UI.Enums;
+using GameTracker.Shared.UI.Helpers;
 using Microsoft.AspNetCore.Components;
 using MudBlazor;
 
@@ -45,22 +46,14 @@ public partial class Games : AppComponentBase, IDisposable
 
         DialogResult? result = await dialog.Result;
 
-        if (result is null || result.Canceled)
-            return;
-        
-        if (result.Data is not GameFormDto dto)
+        if (result is { Canceled: false, Data: GameFormDto dto })
         {
-            Snackbar.Add(
-                "Impossible de récupérer les données du jeu.",
-                Severity.Error);
-            return;
+            OperationResult success = await GameState.AddAsync(dto);
+
+            if (success == OperationResult.Success)
+                Snackbar.Add($"{dto.Title} à été ajouté.", Severity.Success);
+            else
+                Snackbar.Add(MessageHelper.GenericError, Severity.Error);
         }
-
-        await GameService.AddAsync(dto);
-        await GameState.RefreshAsync();
-
-        Snackbar.Add(
-            $"Le jeu '{dto.Title}' a été ajouté.",
-            Severity.Success);
     }
 }

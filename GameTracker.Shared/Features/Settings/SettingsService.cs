@@ -23,11 +23,10 @@ public sealed class SettingsService(
 
         SeedResult result = await DatabaseSeeder.SeedAsync(context);
 
-        if (result.HasSeeded)
-        {
-            _databaseState.NotifyDatabaseChanged();
-            _dashboardState.Clear();
-        }
+        if (!result.HasSeeded) return result;
+        
+        _databaseState.NotifyDatabaseChanged();
+        _dashboardState.Clear();
 
         return result;
     }

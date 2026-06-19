@@ -2,6 +2,7 @@
 @using GameTracker.Shared.Features.Common.Dtos
 @using GameTracker.Shared.Features.Games.Dtos
 @using GameTracker.Shared.UI.Helpers
+
 <MudGrid Class="align-center" Spacing="3">
 
     <MudItem xs="12" md="3">
@@ -89,7 +90,6 @@
                              Color="Color.Error"
                              Disabled="@(ReadOnly || IsWishlist)"/>
     </MudItem>
-
 </MudGrid>
 
 @code {

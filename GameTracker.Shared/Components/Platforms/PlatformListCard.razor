@@ -1,11 +1,11 @@
 @using GameTracker.Shared.Components.Shared
 @using GameTracker.Shared.Components.Shared.Dialogs
-@using GameTracker.Shared.Domain.Entities
 @using GameTracker.Shared.Features.Common.Dtos
 @using GameTracker.Shared.Features.Common.Enums
 @using GameTracker.Shared.Features.Platforms
 @using GameTracker.Shared.Features.Platforms.Dtos
 @using GameTracker.Shared.State
+@using GameTracker.Shared.UI.Helpers
 @using GameTracker.Shared.UI.Models
 @inherits AppComponentBase
 
@@ -52,7 +52,6 @@
                                              Size="Size.Small"
                                              Class="me-1"/>
                                 }
-
                                 @platform.TotalGames jeu@(platform.TotalGames > 1 ? "x" : "")
                             </MudChip>
 
@@ -78,9 +77,8 @@
 </MudPaper>
 
 @code {
-    [Parameter, EditorRequired] public List<PlatformListDto> Platforms { get; set; } = [];
+    [Parameter] [EditorRequired] public List<PlatformListDto> Platforms { get; set; } = [];
 
-    [Inject] private PlatformService PlatformService { get; set; } = null!;
     [Inject] private PlatformState PlatformState { get; set; } = null!;
     [Inject] private IDialogService DialogService { get; set; } = null!;
     [Inject] private ISnackbar Snackbar { get; set; } = null!;
@@ -103,9 +101,12 @@
 
         if (result is { Canceled: false, Data: NameFormDto dto })
         {
-            await PlatformService.AddAsync(PlatformReferenceType.Platform, dto);
-            Snackbar.Add($"La plateforme '{dto.Name}' a été ajouté.", Severity.Success);
-            await PlatformState.ReloadAsync();
+            OperationResult success = await PlatformState.AddAsync(PlatformReferenceType.Platform, dto);
+
+            if (success == OperationResult.Success)
+                Snackbar.Add($"{dto.Name} à été ajouté.", Severity.Success);
+            else
+                Snackbar.Add(MessageHelper.GenericError, Severity.Error);
         }
     }
 
@@ -125,8 +126,14 @@
 
         if (result is { Canceled: false, Data: NameFormDto dto })
         {
-            await PlatformService.UpdateAsync(PlatformReferenceType.Platform, dto);
-            await PlatformState.ReloadAsync();
+            OperationResult success = await PlatformState.UpdateAsync(PlatformReferenceType.Platform, dto);
+
+            if (success == OperationResult.Success)
+                Snackbar.Add($"{dto.Name} à été modifier.", Severity.Success);
+            else if (success == OperationResult.NotFound)
+                Snackbar.Add(message: MessageHelper.NotFoundError, Severity.Error);
+            else
+                Snackbar.Add(MessageHelper.GenericError, Severity.Error);
         }
     }
 
@@ -154,20 +161,23 @@
 
         if (result is { Canceled: false })
         {
-            OperationResult operationResult = await PlatformService.DeleteAsync(PlatformReferenceType.Platform, platform.Id);
+            OperationResult operationResult = await PlatformState.DeleteAsync(PlatformReferenceType.Platform, platform.Id);
 
             switch (operationResult)
             {
                 case OperationResult.Success:
-                    Snackbar.Add("Élément supprimé.", Severity.Success);
-                    await PlatformState.ReloadAsync();
+                    Snackbar.Add($"{platform.Name} à été supprimé.", Severity.Success);
                     break;
                 case OperationResult.InUse:
-                    Snackbar.Add("Impossible de supprimer cet élément car il est utilisé par un ou plusieurs jeux.",
+                    Snackbar.Add($"Impossible de supprimer {platform.Name} car il est utilisé par un ou plusieurs jeux.",
                         Severity.Warning);
                     break;
                 case OperationResult.NotFound:
-                    Snackbar.Add("Element introuvable", Severity.Error);
+                    Snackbar.Add(MessageHelper.NotFoundError, Severity.Error);
+                    break;
+                case OperationResult.Error:
+                default:
+                    Snackbar.Add(MessageHelper.GenericError, Severity.Error);
                     break;
             }
         }

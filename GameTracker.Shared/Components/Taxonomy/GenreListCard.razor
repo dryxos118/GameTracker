@@ -5,6 +5,7 @@
 @using GameTracker.Shared.Features.Taxonomy
 @using GameTracker.Shared.Features.Taxonomy.Dtos
 @using GameTracker.Shared.State
+@using GameTracker.Shared.UI.Helpers
 @using GameTracker.Shared.UI.Models
 @inherits AppComponentBase
 
@@ -51,7 +52,6 @@
                                              Size="Size.Small"
                                              Class="me-1"/>
                                 }
-
                                 @genre.TotalGames jeu@(genre.TotalGames > 1 ? "x" : "")
                             </MudChip>
 
@@ -77,7 +77,7 @@
 </MudPaper>
 
 @code {
-    [Parameter][EditorRequired] public List<GenreListDto> Genres { get; set; } = [];
+    [Parameter] [EditorRequired] public List<GenreListDto> Genres { get; set; } = [];
 
     [Inject] public TaxonomyState TaxonomyState { get; set; } = null!;
     [Inject] public IDialogService DialogService { get; set; } = null!;
@@ -101,12 +101,12 @@
 
         if (result is { Canceled: false, Data: NameFormDto dto })
         {
-            bool success = await TaxonomyState.AddAsync(TaxonomyReferenceType.Genre, dto);
+            OperationResult success = await TaxonomyState.AddAsync(TaxonomyReferenceType.Genre, dto);
 
-            if (success)
-                Snackbar.Add($"Le genre '{dto.Name}' a été ajouté.", Severity.Success);
+            if (success == OperationResult.Success)
+                Snackbar.Add($"{dto.Name} à été ajouté.", Severity.Success);
             else
-                Snackbar.Add("Une erreur s'est produite. Veuillez réessayer.", Severity.Error);
+                Snackbar.Add(MessageHelper.GenericError, Severity.Error);
         }
     }
 
@@ -126,12 +126,14 @@
 
         if (result is { Canceled: false, Data: NameFormDto dto })
         {
-            bool success = await TaxonomyState.UpdateAsync(TaxonomyReferenceType.Genre, dto);
+            OperationResult success = await TaxonomyState.UpdateAsync(TaxonomyReferenceType.Genre, dto);
 
-            if (success)
-                Snackbar.Add($"Le genre '{dto.Name}' a été modifier.", Severity.Success);
+            if (success == OperationResult.Success)
+                Snackbar.Add($"{dto.Name} à été modifier.", Severity.Success);
+            else if (success == OperationResult.NotFound)
+                Snackbar.Add(message: MessageHelper.NotFoundError, Severity.Error);
             else
-                Snackbar.Add("Une erreur s'est produite. Veuillez réessayer.", Severity.Error);
+                Snackbar.Add(MessageHelper.GenericError, Severity.Error);
         }
     }
 
@@ -164,17 +166,18 @@
             switch (operationResult)
             {
                 case OperationResult.Success:
-                    Snackbar.Add("Élément supprimé.", Severity.Success);
+                    Snackbar.Add($"{genre.Name} à été supprimé.", Severity.Success);
                     break;
                 case OperationResult.InUse:
-                    Snackbar.Add("Impossible de supprimer cet élément car il est utilisé par un ou plusieurs jeux.",
+                    Snackbar.Add($"Impossible de supprimer {genre.Name} car il est utilisé par un ou plusieurs jeux.",
                         Severity.Warning);
                     break;
                 case OperationResult.NotFound:
-                    Snackbar.Add("Element introuvable", Severity.Error);
+                    Snackbar.Add(MessageHelper.NotFoundError, Severity.Error);
                     break;
+                case OperationResult.Error:
                 default:
-                    Snackbar.Add("Une erreur s'est produite. Veuillez réessayer.", Severity.Error);
+                    Snackbar.Add(MessageHelper.GenericError, Severity.Error);
                     break;
             }
         }

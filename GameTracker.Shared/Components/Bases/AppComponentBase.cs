@@ -6,8 +6,9 @@ namespace GameTracker.Shared.Components.Bases;
 
 public class AppComponentBase : ComponentBase
 {
-    protected bool IsInitialized;
     [Inject] public IStringLocalizer<AppLocalization> L { get; set; } = null!;
+
+    protected bool IsInitialized;
 
     protected override async Task OnInitializedAsync()
     {

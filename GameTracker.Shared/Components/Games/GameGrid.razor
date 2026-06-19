@@ -1,4 +1,5 @@
 @using GameTracker.Shared.Features.Games.Dtos
+
 <MudGrid Spacing="3">
     @foreach (GameListItemDto game in Games)
     {
@@ -9,5 +10,5 @@
 </MudGrid>
 
 @code {
-    [Parameter] public IReadOnlyList<GameListItemDto> Games { get; set; } = [];
+    [Parameter] [EditorRequired] public IReadOnlyList<GameListItemDto> Games { get; set; } = [];
 }

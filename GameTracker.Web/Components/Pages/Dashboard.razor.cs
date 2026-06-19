@@ -8,7 +8,6 @@ public partial class Dashboard : AppComponentBase, IDisposable
 {
     [Inject] private DashboardState DashboardState { get; set; } = null!;
 
-
     protected override async Task OnInitializedAsync()
     {
         DashboardState.OnChange += StateHasChanged;

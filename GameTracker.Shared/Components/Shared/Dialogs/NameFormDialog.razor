@@ -5,7 +5,7 @@
                 ConfirmText="@ConfirmText"
                 OnConfirm="@Submit"
                 Style="min-width: 35%">
-    
+
     <MudForm @ref="_form">
         <MudGrid Class="align-center" Spacing="3">
             <MudItem xs="12" md="3">
@@ -22,14 +22,14 @@
                               RequiredError="Le nom est obligatoire."/>
             </MudItem>
         </MudGrid>
-        
     </MudForm>
 </AppDialogShell>
 
 @code {
     [CascadingParameter] private IMudDialogInstance MudDialog { get; set; } = null!;
-    [Parameter, EditorRequired] public string Title { get; set; }
-    [Parameter, EditorRequired] public NameFormDto Model { get; set; } = new();
+    
+    [Parameter] [EditorRequired] public string Title { get; set; } = string.Empty;
+    [Parameter] [EditorRequired] public NameFormDto Model { get; set; } = new();
     [Parameter] public string ConfirmText { get; set; } = "Enregistrer";
 
     private MudForm? _form;
@@ -40,10 +40,11 @@
             return;
 
         await _form.ValidateAsync();
-        
-        if(!_form.IsValid)
+
+        if (!_form.IsValid)
             return;
-        
+
         MudDialog.Close(DialogResult.Ok(Model));
     }
+
 }

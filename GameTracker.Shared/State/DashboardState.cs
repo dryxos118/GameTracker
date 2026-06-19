@@ -34,11 +34,6 @@ public sealed class DashboardState(DashBoardService dashBoardService)
         NotifyStateChanged();
     }
 
-    public async Task RefreshAsync()
-    {
-        await LoadAsync(true);
-    }
-
     public void Clear()
     {
         Stats = null;
