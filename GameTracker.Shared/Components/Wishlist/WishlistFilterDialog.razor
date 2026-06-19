@@ -1,4 +1,3 @@
-@using GameTracker.Shared.Components.Shared
 @using GameTracker.Shared.Components.Shared.Dialogs
 @using GameTracker.Shared.Domain.Enums
 @using GameTracker.Shared.Features.Common.Dtos
@@ -50,25 +49,7 @@
                 }
             </MudSelect>
         </MudItem>
-
-        <MudItem xs="12" md="4">
-            <MudText Typo="Typo.subtitle2">
-                Statut :
-            </MudText>
-        </MudItem>
-
-        <MudItem xs="12" md="8">
-            <MudSelect T="GamePlayStatus?" Variant="Variant.Outlined"
-                       Margin="Margin.Dense" @bind-Value="Model.GamePlayStatus">
-                @foreach (SelectItemDto<GamePlayStatus?> item in SelectHelper.GamePlayStatuses)
-                {
-                    <MudSelectItem Value="@item.Value">
-                        @item.Text
-                    </MudSelectItem>
-                }
-            </MudSelect>
-        </MudItem>
-
+        
         <MudItem xs="12" md="4">
             <MudText Typo="Typo.subtitle2">
                 Tri :
@@ -78,26 +59,14 @@
         <MudItem xs="12" md="8">
             <MudSelect T="GameSortBy" Variant="Variant.Outlined"
                        Margin="Margin.Dense" @bind-Value="Model.SortBy">
-                @foreach (SelectItemDto<GameSortBy> item in SelectHelper.GameSortBy)
+                @foreach (SelectItemDto<GameSortBy> item in SelectHelper.GameSortBy
+                                  .Where(x => x.Value is GameSortBy.Recent or GameSortBy.Title))
                 {
                     <MudSelectItem Value="@item.Value">
                         @item.Text
                     </MudSelectItem>
                 }
             </MudSelect>
-        </MudItem>
-
-        <MudItem xs="12" md="4">
-            <MudText Typo="Typo.subtitle2">
-                Favoris uniquement :
-            </MudText>
-        </MudItem>
-
-        <MudItem xs="12" md="8">
-            <MudToggleIconButton @bind-Toggled="Model.FavoritesOnly"
-                                 Icon="@Icons.Material.Outlined.FavoriteBorder"
-                                 ToggledIcon="@Icons.Material.Filled.Favorite"
-                                 Color="Color.Error"/>
         </MudItem>
 
     </MudGrid>
@@ -107,9 +76,9 @@
 @code {
     [CascadingParameter] private IMudDialogInstance MudDialog { get; set; } = null!;
 
-    [Parameter][EditorRequired] public GameFilterModel Model { get; set; } = new();
+    [Parameter] [EditorRequired] public WishlistFilterModel Model { get; set; } = new();
 
-    [Inject] private GameState GameState { get; set; } = null!;
+    [Inject] private WishlistState WishlistState { get; set; } = null!;
     [Inject] private PlatformService PlatformService { get; set; } = null!;
 
     private List<SelectItemDto<int>> Platforms { get; set; } = [];

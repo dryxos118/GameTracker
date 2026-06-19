@@ -1,0 +1,71 @@
+@inherits AppComponentBase
+@using GameTracker.Shared.State
+@using GameTracker.Shared.UI.Models
+@implements IDisposable
+
+<MudPaper Outlined="true" Class="pa-4">
+    <MudStack Row="true" Class="page-header" Breakpoint="Breakpoint.SmAndDown" Spacing="2">
+
+        <MudTextField T="string" Value="@WishlistState.Filters.Search" ValueChanged="@OnSearchChanged"
+                      Placeholder="Rechercher un jeu..." Variant="Variant.Outlined"
+                      Margin="Margin.Dense" Adornment="Adornment.Start"
+                      AdornmentIcon="@Icons.Material.Filled.Search"
+                      Immediate="true"/>
+
+        <MudSpacer/>
+
+        <MudStack Row="true">
+            <MudButton Variant="Variant.Filled" Color="Color.Primary"
+                       StartIcon="@Icons.Material.Filled.FilterList"
+                       OnClick="@OpenFilters">
+                Filtres
+            </MudButton>
+
+            <MudButton Variant="Variant.Outlined" Color="Color.Error"
+                       StartIcon="@Icons.Material.Filled.RestartAlt"
+                       Disabled="@(!WishlistState.HasActiveFilters)"
+                       OnClick="@WishlistState.ResetFilters">
+                Reset
+            </MudButton>
+        </MudStack>
+    </MudStack>
+</MudPaper>
+
+@code {
+
+    [Inject] private WishlistState WishlistState { get; set; } = null!;
+    [Inject] private IDialogService DialogService { get; set; } = null!;
+
+    protected override void OnInitialized()
+    {
+        WishlistState.OnChange += StateHasChanged;
+    }
+
+    private void OnSearchChanged(string? search)
+    {
+        WishlistState.Filters.Search = search ?? string.Empty;
+        WishlistState.NotifyStateChanged();
+    }
+
+    private async Task OpenFilters()
+    {
+        DialogParameters parameters = new()
+        {
+            { nameof(WishlistFilterDialog.Model), WishlistState.Filters.Clone() }
+        };
+
+        IDialogReference dialog = await DialogService.ShowAsync<WishlistFilterDialog>("null", parameters);
+
+        DialogResult? result = await dialog.Result;
+
+        if (result is null || result.Canceled || result.Data is not WishlistFilterModel model)
+            return;
+
+        WishlistState.ApplyFilters(model);
+    }
+
+    public void Dispose()
+    {
+        WishlistState.OnChange -= StateHasChanged;
+    }
+}

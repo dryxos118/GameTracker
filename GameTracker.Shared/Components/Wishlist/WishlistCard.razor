@@ -1,0 +1,192 @@
+@using GameTracker.Shared.Components.Shared.Dialogs
+@using GameTracker.Shared.Components.Shared.Dialogs.GameForm
+@using GameTracker.Shared.Domain.Entities
+@using GameTracker.Shared.Features.Common.Enums
+@using GameTracker.Shared.Features.Games
+@using GameTracker.Shared.Features.Games.Dtos
+@using GameTracker.Shared.Features.Wishlist.Dtos
+@using GameTracker.Shared.State
+@using GameTracker.Shared.UI.Enums
+@using GameTracker.Shared.UI.Models
+
+<MudCard Outlined="true" Class="game-card">
+
+    <div class="game-card-cover">
+
+        @if (!string.IsNullOrWhiteSpace(WishlistGame.CoverUrl))
+        {
+            <MudImage Src="@WishlistGame.CoverUrl"
+                      Alt="@WishlistGame.Title"
+                      ObjectFit="ObjectFit.Cover"
+                      Class="game-card-image"/>
+        }
+        else
+        {
+            <MudStack AlignItems="AlignItems.Center"
+                      Justify="Justify.Center"
+                      Class="game-card-placeholder">
+
+                <MudIcon Icon="@Icons.Material.Filled.SportsEsports"
+                         Color="Color.Primary"
+                         Style="font-size: 72px;"/>
+
+            </MudStack>
+        }
+
+        <MudMenu Size="Size.Medium" Icon="@Icons.Material.Filled.MoreVert"
+                 Class="game-card-menu">
+
+            <MudMenuItem Icon="@Icons.Material.Filled.Edit"
+                         OnClick="@(async () => await UpdateGame())">
+                Modifier
+            </MudMenuItem>
+
+            <MudMenuItem Icon="@Icons.Material.Filled.LibraryAdd"
+                         OnClick="@(async () => await MoveToLibrary())">
+                Ajouter à la bibliothèque
+            </MudMenuItem>
+
+            <MudMenuItem Icon="@Icons.Material.Filled.DeleteOutline"
+                         IconColor="Color.Error"
+                         OnClick="@(async () => await DeleteGame())">
+                Supprimer
+            </MudMenuItem>
+
+        </MudMenu>
+
+    </div>
+
+    <MudCardContent>
+        <MudStack Spacing="2">
+            <MudText Typo="Typo.h6">
+                @WishlistGame.Title
+            </MudText>
+
+            <MudChip T="string" Size="Size.Small" Variant="Variant.Outlined">
+                @if (WishlistGame.LauncherName is not null)
+                {
+                    string value = $"{WishlistGame.PlatformName} : {WishlistGame.LauncherName}";
+                    @value
+                }
+                else
+                {
+                    @WishlistGame.PlatformName
+                }
+            </MudChip>
+        </MudStack>
+    </MudCardContent>
+</MudCard>
+
+@code {
+    [Parameter, EditorRequired] public WishlistGameDto WishlistGame { get; set; } = null!;
+    [Inject] private WishlistState WishlistState { get; set; } = null!;
+    [Inject] private GameService GameService { get; set; } = null!;
+    [Inject] private IDialogService DialogService { get; set; } = null!;
+    [Inject] private ISnackbar Snackbar { get; set; } = null!;
+
+    private async Task UpdateGame()
+    {
+        DialogParameters parameters = new()
+        {
+            [nameof(GameFormDialog.Title)] = "Modifier un jeu de la liste de souhaits",
+            [nameof(GameFormDialog.GameId)] = WishlistGame.Id,
+            [nameof(GameFormDialog.Mode)] = DialogMode.Edit
+        };
+
+        IDialogReference dialog = await DialogService.ShowAsync<GameFormDialog>(
+            null, parameters,
+            new DialogOptions { BackdropClick = false, CloseOnEscapeKey = false });
+
+        DialogResult? result = await dialog.Result;
+
+        if (result is null || result.Canceled)
+            return;
+
+        if (result.Data is not GameFormDto dto)
+        {
+            Snackbar.Add(
+                "Impossible de récupérer les données du jeu.",
+                Severity.Error);
+            return;
+        }
+
+        await GameService.UpdateAsync(dto);
+
+        Snackbar.Add(
+            $"'{dto.Title}' a été Modifier.",
+            Severity.Success);
+    }
+
+    private async Task MoveToLibrary()
+    {
+        AppMessageDialogModel model = new()
+        {
+            Title = "Ajouter à la bibliothèque",
+            Message = $"Ajouter le jeu \"{WishlistGame.Title}\" à votre bibliothèque ?",
+            SubTitle = "Le jeu sera retiré de la liste de souhaits.",
+            ConfirmText = "Ajouter",
+            CancelText = "Annuler",
+            Icon = Icons.Material.Filled.LibraryAdd,
+        };
+
+        DialogParameters parameters = new()
+        {
+            [nameof(AppMessageDialog.Model)] = model
+        };
+
+        IDialogReference dialog =
+            await DialogService.ShowAsync<AppMessageDialog>(parameters);
+
+        DialogResult? result = await dialog.Result;
+
+        if (result is null || result.Canceled)
+            return;
+
+        OperationResult operationResult = await WishlistState.MoveToLibraryAsync(WishlistGame.Id);
+
+        switch (operationResult)
+        {
+            case OperationResult.Success:
+                Snackbar.Add($"'{WishlistGame.Title}' ajouté à la bibliothèque.", Severity.Success);
+                break;
+            case OperationResult.NotFound:
+                Snackbar.Add("Element introuvable", Severity.Error);
+                break;
+            default:
+                Snackbar.Add("Une erreur s'est produite. Veuillez réessayer.", Severity.Error);
+                break;
+        }
+    }
+
+    private async Task DeleteGame()
+    {
+        AppMessageDialogModel model = new()
+        {
+            Title = "Confirmation",
+            Message = $"Supprimer le jeu \"{WishlistGame.Title}\" ?",
+            SubTitle = "Cette action est irréversible.",
+            ConfirmText = "Supprimer",
+            CancelText = "Annuler",
+            Icon = Icons.Material.Filled.Delete,
+            Color = Color.Error
+        };
+
+        DialogParameters parameters = new()
+        {
+            [nameof(AppMessageDialog.Model)] = model
+        };
+
+        IDialogReference dialog = await DialogService.ShowAsync<AppMessageDialog>(parameters);
+
+        DialogResult? result = await dialog.Result;
+
+        if (result is null || result.Canceled)
+            return;
+
+        bool deleted = await GameService.DeleteAsync(WishlistGame.Id);
+
+        if (deleted)
+            Snackbar.Add($"'{WishlistGame.Title}' supprimé de la liste de souhaits.", Severity.Success);
+    }
+
+}

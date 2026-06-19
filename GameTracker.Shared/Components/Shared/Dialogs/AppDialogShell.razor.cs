@@ -2,7 +2,7 @@ using GameTracker.Shared.Components.Bases;
 using Microsoft.AspNetCore.Components;
 using MudBlazor;
 
-namespace GameTracker.Shared.Components.Shared;
+namespace GameTracker.Shared.Components.Shared.Dialogs;
 
 public partial class AppDialogShell : AppComponentBase
 {

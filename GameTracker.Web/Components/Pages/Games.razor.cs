@@ -1,5 +1,6 @@
 using GameTracker.Shared.Components.Bases;
 using GameTracker.Shared.Components.Games;
+using GameTracker.Shared.Components.Shared.Dialogs.GameForm;
 using GameTracker.Shared.Domain.Enums;
 using GameTracker.Shared.Features.Games;
 using GameTracker.Shared.Features.Games.Dtos;
@@ -46,8 +47,7 @@ public partial class Games : AppComponentBase, IDisposable
 
         if (result is null || result.Canceled)
             return;
-
-
+        
         if (result.Data is not GameFormDto dto)
         {
             Snackbar.Add(

@@ -1,0 +1,14 @@
+@using GameTracker.Shared.Features.Wishlist.Dtos
+
+<MudGrid Spacing="3">
+    @foreach (WishlistGameDto wishlistGame in WishlistGames)
+    {
+        <MudItem xs="12" sm="6" md="4" lg="3">
+            <WishlistCard WishlistGame="wishlistGame" />
+        </MudItem>
+    }
+</MudGrid>
+
+@code {
+    [Parameter] public IReadOnlyList<WishlistGameDto> WishlistGames { get; set; } = [];
+}

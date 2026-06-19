@@ -3,6 +3,7 @@ using GameTracker.Shared.Features.Games;
 using GameTracker.Shared.Features.Platforms;
 using GameTracker.Shared.Features.Settings;
 using GameTracker.Shared.Features.Taxonomy;
+using GameTracker.Shared.Features.Wishlist;
 using GameTracker.Shared.State;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -16,6 +17,7 @@ public static class ServiceCollectionExtensions
         services.AddScoped<GameService>();
         services.AddScoped<PlatformService>();
         services.AddScoped<TaxonomyService>();
+        services.AddScoped<WishlistService>();
         services.AddScoped<SettingsService>();
 
         services.AddScoped<DatabaseState>();
@@ -23,5 +25,6 @@ public static class ServiceCollectionExtensions
         services.AddScoped<GameState>();
         services.AddScoped<PlatformState>();
         services.AddScoped<TaxonomyState>();
+        services.AddScoped<WishlistState>();
     }
 }

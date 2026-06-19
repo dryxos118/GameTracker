@@ -9,7 +9,7 @@ using GameTracker.Shared.UI.Enums;
 using Microsoft.AspNetCore.Components;
 using MudBlazor;
 
-namespace GameTracker.Shared.Components.Games;
+namespace GameTracker.Shared.Components.Shared.Dialogs.GameForm;
 
 public partial class GameFormDialog : AppComponentBase
 {
@@ -35,9 +35,15 @@ public partial class GameFormDialog : AppComponentBase
     protected override async Task OnInitializedAsync()
     {
         if (GameId.HasValue)
+        {
             Model = await GameService.GetGameFormAsync(GameId.Value);
+        }
         else
+        {
             Model.LibraryStatus = InitialLibraryStatus;
+            if (InitialLibraryStatus == GameLibraryStatus.Wishlist)
+                Model.PlayStatus = GamePlayStatus.Backlog;
+        }
 
         Platforms = await PlatformService.GetPlatformSelectItemsAsync();
         if (Model.PlatformId is null)
